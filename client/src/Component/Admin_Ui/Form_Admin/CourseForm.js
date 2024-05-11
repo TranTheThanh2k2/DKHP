@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
 
-const AdminDashboard = () => {
+const CourseForm = () => {
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState({
     Course_Name: "",
@@ -110,8 +110,6 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <h2>Trang Giao Diện của Admin</h2>
-
       <div>
         <h3>Tạo mới khóa học</h3>
         <form onSubmit={handleCreateCourse}>
@@ -355,4 +353,4 @@ const AdminDashboard = () => {
     </div>
   );
 };
-export default AdminDashboard;
+export default CourseForm;
