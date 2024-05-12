@@ -92,15 +92,114 @@
   margin-top: 20px;
   border-top: 1px solid black;
   padding-top: 20px;
-  
 }
 .horizontal-line {
-    width: 100%;
-    border-top: 1px solid black;
-  }
+  width: 100%;
+  margin-top: 10px;
+}
 .coure-title {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
+  width: 100%;
+  height: 20px;
+}
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.course-table th,
+.course-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.course-table th {
+  background-color: #f2f2f2;
+}
+
+.course-table tr:hover {
+  background-color: #f2f2f2;
+}
+
+.update-button,
+.delete-button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.update-button:hover,
+.delete-button:hover {
+  background-color: #45a049;
+}
+
+
+
+
+/* CSS cho modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+}
+
+/* CSS cho form chỉnh sửa khóa học */
+.edit-course-form {
+  list-style: none;
+  padding: 0;
+}
+
+.edit-course-form div {
+  margin-bottom: 20px;
+}
+
+.edit-course-form input,
+.edit-course-form select {
+  display: block;
+  width: calc(100% - 20px);
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-course-form button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.edit-course-form button:last-child {
+  margin-right: 0;
+}
+
+.edit-course-form button:hover {
+  background-color: #ff1900;
+}
+
+.close-button {
+  background-color: #e91000;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
 }
