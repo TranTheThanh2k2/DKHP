@@ -79,14 +79,20 @@ exports.login = async (req, res) => {
     }
     // Lấy giá trị isAdmin từ cơ sở dữ liệu
     const isAdmin = user.isAdmin;
+    // Nếu người dùng là sinh viên, lấy studentId từ cơ sở dữ liệu và thêm vào token JWT
+    let studentId;
+    if (!isAdmin) {
+      const student = await Student.findOne({ userId: user._id });
+      studentId = student._id; // Giả sử studentId được lấy từ một trường trong bảng Student
+    }
     // Tạo token JWT
     const secretKey = '1234'; 
-    console.log(isAdmin);
-    const token = jwt.sign({ userId: user._id, isAdmin }, secretKey, { expiresIn: '1h' });
-    // Trả về token và trường isAdmin
-    res.status(200).json({ token, isAdmin });
+    const token = jwt.sign({ userId: user._id, isAdmin, studentId }, secretKey, { expiresIn: '1h' });
+    // Trả về token, trường isAdmin và studentId (nếu có)
+    res.status(200).json({ token, isAdmin, studentId });
+    console.log(token);
+    console.log(studentId);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
