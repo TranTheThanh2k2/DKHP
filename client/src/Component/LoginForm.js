@@ -36,58 +36,70 @@ const LoginForm = () => {
   };
 
   return (
-    <div class="body2">
-      <div class="login-container" >
-        <div class="title-header">
-          <div class="img-title-header">
+    <div className="login-body">
+      <div className="login-container">
+        <div className="title-header">
+          <div className="img-title-header">
             <img
               src={iuh}
               alt="hiiiiiiiiiiiiiiiiiii"
-              style={{ height: 145, width: 1140 ,marginLeft:5}}
+              style={{ height: "auto", width: "100%" }}
             />
           </div>
-          <div class="img-title-header2">
+          <div className="img-title-header2">
             <img
               src={iuh2}
               alt="hiiiiiiiiiiiiiiiiiii"
-              style={{ height: 500, width: 1140 , marginLeft:5 , marginTop:20   }}
+              style={{ height: "auto", width: "100%", marginTop: 20 }}
             />
           </div>
-
-
         </div>
 
-        <div class="modal-login">
+        <div className="modal-login">
           <img
             src={logo}
             alt="Logo của hệ thống"
-            style={{ height: 145, width: 450, resize: "contain" }}
+            style={{ height: 145, width: "90%", maxWidth: 450 }}
           />
           <h2>CỔNG ĐĂNG KÍ HỌC PHẦN</h2>
-          <text>SINH VIÊN</text>
+          <p>SINH VIÊN</p>
           <h3>Đăng nhập vào hệ thống</h3>
-          <form onSubmit={handleSubmit} class="form-imput">
-            <p> Email </p>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <p> password </p>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Đăng nhập</button>
+
+          <form onSubmit={handleSubmit} className="form-input">
+            <div className="input-container">
+              <p className="p-input" htmlFor="email">
+                Email
+              </p>
+
+              <input
+                id="email"
+                className="input-class"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="input-container">
+              <p className="p-input" htmlFor="password">
+                Password
+              </p>
+              <input
+                id="password"
+                className="input-class"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button className="button" type="submit">Đăng nhập</button>
           </form>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
         </div>
       </div>
-      <footer style={{backgroundColor: "white"}}>
-        <div class="footer">
+      <footer style={{ backgroundColor: "white" }}>
+        <div className="footer">
           <p>&copy; 2024 Trường Đại học Công nghiệp TP. Hồ Chí Minh</p>
           <p>
             Địa chỉ: Số 12 Nguyễn Văn Bão, Phường 4, Quận Gò Vấp, TP. Hồ Chí

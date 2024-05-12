@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
+import "./style_admin/CourseForm.css";
 
 const CourseForm = () => {
   const [courses, setCourses] = useState([]);
@@ -109,101 +110,132 @@ const CourseForm = () => {
   };
 
   return (
-    <div>
-      <div>
-        <h3>Tạo mới khóa học</h3>
-        <form onSubmit={handleCreateCourse}>
-          <input
-            type="text"
-            value={newCourse.Course_Name}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Course_Name: e.target.value })
-            }
-            placeholder="Tên khóa học"
-          />
-          <input
-            type="text"
-            value={newCourse.Course_ID}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Course_ID: e.target.value })
-            }
-            placeholder="ID khóa học"
-          />
-          <input
-            type="number"
-            value={newCourse.Credit_Hours}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Credit_Hours: e.target.value })
-            }
-            placeholder="Số tín chỉ"
-          />
-          <input
-            type="text"
-            value={newCourse.Instructor}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Instructor: e.target.value })
-            }
-            placeholder="Giảng viên"
-          />
-          <input
-            type="text"
-            value={newCourse.Classroom}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Classroom: e.target.value })
-            }
-            placeholder="Phòng học"
-          />
-          <input
-            type="text"
-            value={newCourse.Class_Time}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Class_Time: e.target.value })
-            }
-            placeholder="Thời gian học"
-          />
+    <div class="header-form">
+      <h3 class="form-title">Tạo mới khóa học</h3>
+      <div class="create-course-form">
 
-          <select
-            value={newCourse.Semester_ID}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Semester_ID: e.target.value })
-            }
-          >
-            <option value="">Chọn kỳ học</option>
-            {semesters.map((semester) => (
-              <option key={semester._id} value={semester._id}>
-                {semester.Semester_Name}
-              </option>
-            ))}
-          </select>
+        
 
-          <select
-            value={newCourse.Department_Code}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Department_Code: e.target.value })
-            }
-          >
-            <option value="">Chọn phòng ban</option>
-            {departments.map((department) => (
-              <option key={department._id} value={department._id}>
-                {department.Department_Name}
-              </option>
-            ))}
-          </select>
+        <div class="course-form">
+          <form onSubmit={handleCreateCourse} >
+            <div class="container-input-1">
+              <input
+                type="text"
+                value={newCourse.Course_Name}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Course_Name: e.target.value })
+                }
+                placeholder="Tên khóa học"
+                class="input-field"
+              />
+              <input
+                type="text"
+                value={newCourse.Course_ID}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Course_ID: e.target.value })
+                }
+                placeholder="ID khóa học"
+                class="input-field"
+              />
+              <input
+                type="number"
+                value={newCourse.Credit_Hours}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Credit_Hours: e.target.value })
+                }
+                placeholder="Số tín chỉ"
+                class="input-field"
+              />
+            </div>
+            <div class="container-input-2">
+              <input
+                type="text"
+                value={newCourse.Instructor}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Instructor: e.target.value })
+                }
+                placeholder="Giảng viên"
+                class="input-field"
+              />
+              <input
+                type="text"
+                value={newCourse.Classroom}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Classroom: e.target.value })
+                }
+                placeholder="Phòng học"
+                class="input-field"
+              />
+            </div>
+            <div class="container-input-3">
+              <select
+                value={newCourse.Semester_ID}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Semester_ID: e.target.value })
+                }
+                class="select-field"
+              >
+                <option value="">Chọn kỳ học</option>
+                {semesters.map((semester) => (
+                  <option key={semester._id} value={semester._id}>
+                    {semester.Semester_Name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={newCourse.Department_Code}
+                onChange={(e) =>
+                  setNewCourse({
+                    ...newCourse,
+                    Department_Code: e.target.value,
+                  })
+                }
+                class="select-field"
+              >
+                <option value="">Chọn phòng ban</option>
+                {departments.map((department) => (
+                  <option key={department._id} value={department._id}>
+                    {department.Department_Name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div class="container-input-4">
+              <input
+                type="text"
+                value={newCourse.Class_Time}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Class_Time: e.target.value })
+                }
+                placeholder="Thời gian học"
+                class="input-field"
+              />
+              <input
+                type="number"
+                value={newCourse.Max_Students}
+                onChange={(e) =>
+                  setNewCourse({ ...newCourse, Max_Students: e.target.value })
+                }
+                placeholder="Số lượng sinh viên tối đa"
+                class="input-field"
+              />
+            </div>
 
-          <input
-            type="number"
-            value={newCourse.Max_Students}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, Max_Students: e.target.value })
-            }
-            placeholder="Số lượng sinh viên tối đa"
-          />
-          <button type="submit">Tạo mới</button>
-        </form>
+            <div class="button">
+              <button type="submit" class="submit-button">
+                Tạo mới
+              </button>
+            </div>
+          </form>
+          
+        </div>
+        
       </div>
-
-      <div>
-        <h3>Danh sách khóa học</h3>
+      <div className="horizontal-line"></div>
+           
+      {/* ở đây */}
+      <div class="course-khoahoc">
+        <h3 class="coure-title">Danh sách khóa học</h3>
         <ul>
           {courses.map((course) => (
             <li key={course._id}>
@@ -228,6 +260,7 @@ const CourseForm = () => {
                   Xóa
                 </button>
               </div>
+
               {editingCourseId === course._id && (
                 <div>
                   <form onSubmit={handleUpdateCourse}>
