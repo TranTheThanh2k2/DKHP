@@ -25,6 +25,9 @@ app.use(cors({ origin: 'http://localhost:3001' }));
 app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/courses',courseRoutes);
+
+
+//chỗ này
 app.use('/semesters', semesterRoutes);
 app.use(departmentRoutes);
 app.use('/api/course',courseRegister);

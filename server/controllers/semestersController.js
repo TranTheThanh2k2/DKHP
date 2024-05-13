@@ -11,7 +11,6 @@ exports.getAllSemesters = async (req, res) => {
 };
 
 // Tạo học kỳ mới
-
 exports.createSemester = async (req, res) => {
   const { Semester_ID, Semester_Name, Year, Start_Date, End_Date } = req.body;
   const semester = new Semester({
