@@ -7,56 +7,92 @@ const StudentDashboard = () => {
   const [semesterId, setSemesterId] = useState('');
   const [message, setMessage] = useState('');
   const [fullName, setFullName] = useState('');
+  const [hiddenStudentId, setHiddenStudentId] = useState('');
+  const [semesters, setSemesters] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     const studentIdFromStorage = localStorage.getItem('studentID');
     if (studentIdFromStorage) {
       setStudentId(studentIdFromStorage);
+      setHiddenStudentId(studentIdFromStorage);
       fetchStudentDetails(studentIdFromStorage);
+      fetchSemesters();
     }
   }, []);
 
   const fetchStudentDetails = async (studentId) => {
     try {
       const response = await axios.get(`http://localhost:3000/api/students/${studentId}`);
-      console.log(response.data.data.Full_Name)
+      setFullName(response.data.data.student.Full_Name);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
+
+  const fetchSemesters = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/semesters`);
+      setSemesters(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const fetchCoursesBySemester = async (semesterId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/courses/${semesterId}/courses`);
+      setCourses(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleRegisterCourse = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/courses/register', {
+      const response = await axios.post('http://localhost:3000/api/course/register', {
         studentId: studentId,
         courseId: courseId,
         semesterId: semesterId
       });
-      setMessage(response.data.message); // Assuming the server returns a message
+      setMessage(response.data.message);
     } catch (error) {
       console.error(error);
-      setMessage('Failed to register course.'); // Display error message if registration fails
+      setMessage('Đăng kí thất bại.');
     }
   };
 
   return (
     <div>
-      <h2>Xin Chào {fullName}</h2>
+      <h2>Sinh Viên:  {fullName}</h2>
       <form onSubmit={handleRegisterCourse}>
+        <input type="hidden" value={hiddenStudentId} />
         <label>
-          Student ID:
-          <input type="text" value={studentId} onChange={(e) => setStudentId(e.target.value)} disabled />
+          <input type="hidden" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
         </label>
         <label>
-          Course ID:
-          <input type="text" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
+          Đợt Đăng Kí
+          <select value={semesterId} onChange={(e) => {
+            setSemesterId(e.target.value);
+            fetchCoursesBySemester(e.target.value);
+          }}>
+            <option value="">-- Chọn học kỳ --</option>
+            {semesters.map(semester => (
+              <option key={semester._id} value={semester._id}>{semester.Semester_Name}</option>
+            ))}
+          </select>
         </label>
         <label>
-          Semester ID:
-          <input type="text" value={semesterId} onChange={(e) => setSemesterId(e.target.value)} />
+          Môn Học:
+          <select value={courseId} onChange={(e) => setCourseId(e.target.value)}>
+            <option value="">-- Chọn môn học --</option>
+            {courses.map(course => (
+              <option key={course._id} value={course._id}>{course.Course_Name}</option>
+            ))}
+          </select>
         </label>
-        <button type="submit">Register Course</button>
+        <button type="submit">Đăng Kí</button>
       </form>
       {message && <p>{message}</p>}
     </div>

@@ -5,8 +5,12 @@ const courseController = require('../controllers/courseController');
 // Tạo mới môn học
 router.post('/', courseController.createCourse);
 
+
 // Lấy danh sách khóa học
 router.get('/', courseController.getCourses);
+
+router.get('/:semesterId/courses', courseController.getCoursesBySemester);
+
 // Cập nhật thông tin môn học
 router.put('/:id', courseController.updateCourse);
 
