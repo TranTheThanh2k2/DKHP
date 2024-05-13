@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSnackbar } from 'notistack';
 
 const StudentDashboard = () => {
   const [studentId, setStudentId] = useState('');
   const [courseId, setCourseId] = useState('');
   const [semesterId, setSemesterId] = useState('');
-  const [message, setMessage] = useState('');
   const [fullName, setFullName] = useState('');
+  const [gender, setGender] = useState('');
+  const [departmentCode, setDepartmentCode] = useState('');
   const [hiddenStudentId, setHiddenStudentId] = useState('');
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const studentIdFromStorage = localStorage.getItem('studentID');
@@ -25,6 +29,8 @@ const StudentDashboard = () => {
     try {
       const response = await axios.get(`http://localhost:3000/api/students/${studentId}`);
       setFullName(response.data.data.student.Full_Name);
+      setDepartmentCode(response.data.data.student.Department_Code);
+      setGender(response.data.data.student.Gender);
     } catch (error) {
       console.error(error);
     }
@@ -53,50 +59,83 @@ const StudentDashboard = () => {
     try {
       const response = await axios.post('http://localhost:3000/api/course/register', {
         studentId: studentId,
-        courseId: courseId,
+        courseId: selectedCourses,
         semesterId: semesterId
       });
-      setMessage(response.data.message);
+      enqueueSnackbar(response.data.message, { variant: 'success'});
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error(error);
-      setMessage('Đăng kí thất bại.');
+      enqueueSnackbar('Đăng ký thất bại.', { variant: 'error' });
+    }
+  };
+
+  const handleCheckboxChange = (courseId) => {
+    if (selectedCourses.includes(courseId)) {
+      setSelectedCourses(selectedCourses.filter(id => id !== courseId));
+    } else {
+      setSelectedCourses([...selectedCourses, courseId]);
     }
   };
 
   return (
     <div>
-      <h2>Sinh Viên:  {fullName}</h2>
+      <h2>Xin Chào !</h2>
+      <h1>{fullName}</h1>
+      <h3>Giới Tính : {gender}</h3>
+      <h3>Khoa : {departmentCode} </h3>
       <form onSubmit={handleRegisterCourse}>
         <input type="hidden" value={hiddenStudentId} />
         <label>
-          <input type="hidden" value={courseId} onChange={(e) => setCourseId(e.target.value)} />
-        </label>
-        <label>
           Đợt Đăng Kí
-          <select value={semesterId} onChange={(e) => {
-            setSemesterId(e.target.value);
-            fetchCoursesBySemester(e.target.value);
-          }}>
+          <select
+            value={semesterId}
+            onChange={(e) => {
+              setSemesterId(e.target.value);
+              fetchCoursesBySemester(e.target.value);
+            }}
+          >
             <option value="">-- Chọn học kỳ --</option>
-            {semesters.map(semester => (
-              <option key={semester._id} value={semester._id}>{semester.Semester_Name}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Môn Học:
-          <select value={courseId} onChange={(e) => setCourseId(e.target.value)}>
-            <option value="">-- Chọn môn học --</option>
-            {courses.map(course => (
-              <option key={course._id} value={course._id}>{course.Course_Name}</option>
+            {semesters.map((semester) => (
+              <option key={semester._id} value={semester._id}>
+                {semester.Semester_Name}
+              </option>
             ))}
           </select>
         </label>
         <button type="submit">Đăng Kí</button>
       </form>
-      {message && <p>{message}</p>}
+      <h3>Danh sách môn học</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Môn Học</th>
+            <th>Tên Môn Học</th>
+            <th>Số Tín Chỉ</th>
+            <th>Đăng ký</th>
+          </tr>
+        </thead>
+        <tbody>
+          {courses.map((course) => (
+            <tr key={course._id}>
+              <td>{course.Course_ID}</td>
+              <td>{course.Course_Name}</td>
+              <td>{course.Credit_Hours}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedCourses.includes(course._id)}
+                  onChange={() => handleCheckboxChange(course._id)}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+  );  
 };
 
 export default StudentDashboard;

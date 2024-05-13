@@ -27,7 +27,6 @@ const LoginForm = () => {
         navigate("/admin-dashboard");
       } else {
         localStorage.setItem("studentID", response.data.studentId);
-        console.log(response.data);
         // Nếu không phải là admin, chuyển hướng đến trang Student Dashboard
         navigate("/student-dashboard");
       }
