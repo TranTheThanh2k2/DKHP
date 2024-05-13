@@ -10,7 +10,15 @@ exports.getCourses = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+exports.getCoursesBySemester = async (req, res) => {
+  try {
+    const { semesterId } = req.params;
+    const courses = await Course.find({ Semester_ID: semesterId });
+    res.status(200).json(courses);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 exports.createCourse = async (req, res) => {
   try {
     const { Semester_ID, Department_Code, ...courseData } = req.body;
@@ -27,6 +35,13 @@ exports.createCourse = async (req, res) => {
       return res.status(400).json({ error: 'Department_Code không hợp lệ' });
     }
 
+    // Kiểm tra xem môn học đã tồn tại trong cơ sở dữ liệu hay chưa
+    const existingCourse = await Course.findOne({ Semester_ID, Department_Code, ...courseData });
+
+    if (existingCourse) {
+      return res.status(400).json({ error: 'Môn học đã tồn tại' });
+    }
+
     const course = new Course({ ...courseData, Semester_ID, Department_Code });
     await course.save();
     res.status(201).json({ message: 'Môn học đã được tạo thành công' });
@@ -35,7 +50,6 @@ exports.createCourse = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.updateCourse = async (req, res) => {
   try {
     const { id } = req.params;
