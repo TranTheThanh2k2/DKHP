@@ -214,6 +214,7 @@ const SemesterForm = () => {
                     </button>
                   </td>
                 </tr>
+                
                 {editingSemesterId === semester._id && (
                   <tr key={`${selectedSemester?._id}-edit`}>
                     <td colSpan="5">
@@ -264,10 +265,10 @@ const SemesterForm = () => {
                               }
                               placeholder="Ngày kết thúc"
                             />
-                            <button type="submit">Cập nhật</button>
+                            <button className="submit-update" type="submit">Cập nhật</button>
                             <button
                               onClick={() => setIsModalOpen(false)}
-                              className="close-button"
+                              className="submit-update"
                             >
                               Đóng
                             </button>
