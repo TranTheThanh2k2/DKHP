@@ -8,6 +8,7 @@ import DepartmentForm from './Component/Admin_Ui/Form_Admin/DepartmentForm';
 import SemesterForm from './Component/Admin_Ui/Form_Admin/SemesterForm';
 import AdminDashboard from './Component/Admin_Ui/AdminDashboard';
 
+
 const App = () => {
   return (
     <SnackbarProvider maxSnack={3}>
