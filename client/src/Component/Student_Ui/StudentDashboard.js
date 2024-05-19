@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import "./style_student/Studentboard.css";
+
 import iuh1 from "../Student_Ui/style_student/iu1.png";
 import toan from "../Student_Ui/style_student/h2.jpg";
 
@@ -157,7 +158,7 @@ const StudentDashboard = () => {
         <h2>Môn Học Phần Đang Chờ Đăng Ký</h2>
       </div>
 
-      <table>
+      <table className="table-student123">
         <thead>
           <tr>
             <th>Mã Môn Học</th>
