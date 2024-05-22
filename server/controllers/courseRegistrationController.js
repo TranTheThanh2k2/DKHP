@@ -26,3 +26,41 @@ exports.registerCourse = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+exports.getRegisteredCoursesBySemester = async (req, res) => {
+  try {
+    const { studentId, semesterId } = req.body;
+
+    // Tìm tất cả các bản ghi đăng ký môn học của sinh viên cho học kì đã chỉ định
+    const registeredCourses = await CourseRegistration.find({
+      studentId: studentId,
+      semesterId: semesterId,
+    });
+
+    res.status(200).json(registeredCourses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.cancelCourseRegistration = async (req, res) => {
+  try {
+    const { studentId, courseId, semesterId } = req.body;
+
+    // Tìm bản ghi đăng ký môn học cần hủy
+    const registration = await CourseRegistration.findOneAndDelete({
+      studentId: studentId,
+      courseId: courseId,
+      semesterId: semesterId,
+    });
+
+    if (!registration) {
+      return res.status(404).json({ message: 'Không tìm thấy bản ghi đăng ký môn học' });
+    }
+
+    res.status(200).json({ message: 'Hủy môn học thành công!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

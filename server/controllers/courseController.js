@@ -2,6 +2,22 @@ const Course = require('../models/course');
 const Semester = require('../models/semester');
 const Department = require('../models/department');
 
+
+// Lấy chi tiết khóa học theo ID
+exports.getCourseById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const course = await Course.findById(id);
+    if (!course) {
+      return res.status(404).json({ error: 'Không tìm thấy khóa học' });
+    }
+    res.status(200).json(course);
+    console.log(course);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.getCourses = async (req, res) => {
   try {
     const courses = await Course.find();
@@ -23,8 +39,6 @@ exports.getCoursesBySemester = async (req, res) => {
 exports.createCourse = async (req, res) => {
   try {
     const { Semester_ID, Department_Code, ...courseData } = req.body;
-    
-    // Kiểm tra xem semester_id và department_code có hợp lệ không
     const semester = await Semester.findById(Semester_ID);
     const department = await Department.findById(Department_Code);
 
@@ -35,8 +49,6 @@ exports.createCourse = async (req, res) => {
     if (!department) {
       return res.status(400).json({ error: 'Department_Code không hợp lệ' });
     }
-
-    // Kiểm tra xem môn học đã tồn tại trong cơ sở dữ liệu hay chưa
     const existingCourse = await Course.findOne({ Semester_ID, Department_Code, ...courseData });
 
     if (existingCourse) {
