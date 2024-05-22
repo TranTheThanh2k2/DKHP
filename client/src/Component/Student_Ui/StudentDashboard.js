@@ -79,9 +79,9 @@ const StudentDashboard = () => {
           },
         }
       );
-      setTimeout(()=>{
+      setTimeout(() => {
         setRegisteredCourses(response.data);
-      },1000)
+      }, 1000);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -98,9 +98,9 @@ const StudentDashboard = () => {
           semesterId: semesterId,
         }
       );
-      setTimeout(()=>{
+      setTimeout(() => {
         enqueueSnackbar(response.data.message, { variant: "success" });
-      },1000);
+      }, 1000);
 
       // Cập nhật lại danh sách registeredCourses sau khi hủy đăng ký môn học
       fetchRegisteredCourses();
@@ -121,9 +121,9 @@ const StudentDashboard = () => {
           semesterId: semesterId,
         }
       );
-      setTimeout(()=>{
+      setTimeout(() => {
         enqueueSnackbar(response.data.message, { variant: "success" });
-      },1000)
+      }, 1000);
       fetchRegisteredCourses();
       setSelectedCourses([]);
     } catch (error) {
@@ -232,7 +232,10 @@ const StudentDashboard = () => {
       </table>
 
       {/* Bảng hiển thị thông tin các khóa học đã chọn */}
-      <h2>Các Khóa Học Đã Chọn</h2>
+      <div className="sv6">
+        <h2>Các Khóa Học Đã Chọn</h2>
+      </div>
+
       <table className="selected-courses">
         <thead>
           <tr>
@@ -240,6 +243,7 @@ const StudentDashboard = () => {
             <th>Tên Môn Học</th>
             <th>Số Tín Chỉ</th>
             <th>Sỉ Số Tối Đa</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -251,22 +255,25 @@ const StudentDashboard = () => {
                 <td>{course.Course_Name}</td>
                 <td>{course.Credit_Hours}</td>
                 <td>{course.Max_Students}</td>
+                <td>
+                  <button
+                    className="btn-register"
+                    type="submit"
+                    onClick={handleRegisterCourse}
+                    style={{ marginLeft: 30, fontSize: 20 }}
+                  >
+                    Đăng Kí
+                  </button>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      <button
-        type="submit"
-        onClick={handleRegisterCourse}
-        style={{ marginLeft: 20, fontSize: 20 }}
-      >
-        Đăng Kí
-      </button>
 
-      <div>
-        <h2>Danh sách môn học đã đăng ký</h2>
-        <table>
+      <div className="list-course">
+        <h2 className="sv6">Danh sách môn học đã đăng ký</h2>
+        <table className="list-course">
           <thead>
             <tr>
               <th>Mã Môn Học</th>
@@ -281,14 +288,14 @@ const StudentDashboard = () => {
             </tr>
           </thead>
           <tbody>
-          {registeredCourses.map((course) => (
+            {registeredCourses.map((course) => (
               <tr key={course._id}>
                 <td>{course.Course_ID}</td>
                 <td>{course.Course_Name}</td>
                 <td>{course.Credit_Hours}</td>
                 <td>{course.Instructor}</td>
                 <td>{course.Classroom}</td>
-                <td>{course.Credit_Hours *  0.9}00.000</td>
+                <td>{course.Credit_Hours * 0.9}00.000</td>
                 <td>{new Date().toLocaleDateString()}</td>
                 <td>
                   <button onClick={() => handleCancelRegistration(course._id)}>
@@ -299,6 +306,17 @@ const StudentDashboard = () => {
             ))}
           </tbody>
         </table>
+        <footer style={{ backgroundColor: "white" }}>
+          <div className="footer">
+            <p>&copy; 2024 Trường Đại học Công nghiệp TP. Hồ Chí Minh</p>
+            <p>
+              Địa chỉ: Số 12 Nguyễn Văn Bão, Phường 4, Quận Gò Vấp, TP. Hồ Chí
+              Minh
+            </p>
+            <p>Điện thoại: 0326026288</p>
+            <p>Email: toanlemale11234@gmail.com</p>
+          </div>
+        </footer>
       </div>
     </div>
   );

@@ -40,7 +40,6 @@
   width: 80%;
   border-collapse: collapse;
   margin-left: 150px;
-
 }
 
 .table-student123,
@@ -58,4 +57,21 @@ td {
 th {
   background-color: #3399ff;
   color: aliceblue;
+}
+.selected-courses {
+  width: 80%;
+  border-collapse: collapse;
+  margin-left: 150px;
+}
+.btn-register{
+  background-color: #0099ff;
+  color: aliceblue;
+  padding: 10px;
+  border-radius: 5px;
+  
+}
+.list-course{
+  width: 90%;
+  border-collapse: collapse;
+  margin-left: 72px ; 
 }
