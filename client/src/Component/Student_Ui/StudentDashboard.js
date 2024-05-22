@@ -16,7 +16,7 @@ const StudentDashboard = () => {
   const [hiddenStudentId, setHiddenStudentId] = useState("");
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null); // Change from array to single value
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const StudentDashboard = () => {
         "http://localhost:3000/api/course/register",
         {
           studentId: studentId,
-          courseId: selectedCourses,
+          courseId: selectedCourse, // Update to single courseId
           semesterId: semesterId,
         }
       );
@@ -84,10 +84,10 @@ const StudentDashboard = () => {
   };
 
   const handleCheckboxChange = (courseId) => {
-    if (selectedCourses.includes(courseId)) {
-      setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
+    if (selectedCourse === courseId) {
+      setSelectedCourse(null);
     } else {
-      setSelectedCourses([...selectedCourses, courseId]);
+      setSelectedCourse(courseId);
     }
   };
 
@@ -176,7 +176,7 @@ const StudentDashboard = () => {
               <td>
                 <input
                   type="checkbox"
-                  checked={selectedCourses.includes(course._id)}
+                  checked={selectedCourse === course._id}
                   onChange={() => handleCheckboxChange(course._id)}
                 />
               </td>

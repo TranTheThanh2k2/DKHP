@@ -10,6 +10,7 @@ exports.getCourses = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 exports.getCoursesBySemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
