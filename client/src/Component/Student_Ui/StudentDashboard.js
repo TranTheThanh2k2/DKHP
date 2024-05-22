@@ -15,6 +15,7 @@ const StudentDashboard = () => {
   const [hiddenStudentId, setHiddenStudentId] = useState("");
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [registeredCourses, setRegisteredCourses] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]); // Danh sách các khóa học được chọn
   const { enqueueSnackbar } = useSnackbar();
 
@@ -27,6 +28,12 @@ const StudentDashboard = () => {
       fetchSemesters();
     }
   }, []);
+
+  useEffect(() => {
+    if (semesterId) {
+      fetchRegisteredCourses();
+    }
+  }, [semesterId]);
 
   const fetchStudentDetails = async (studentId) => {
     try {
@@ -61,6 +68,48 @@ const StudentDashboard = () => {
     }
   };
 
+  const fetchRegisteredCourses = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/course/registeredCoursesBySemester`,
+        {
+          params: {
+            studentId: studentId,
+            semesterId: semesterId,
+          },
+        }
+      );
+      setTimeout(()=>{
+        setRegisteredCourses(response.data);
+      },1000)
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCancelRegistration = async (courseId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/course/cancelCourseRegistration",
+        {
+          studentId: studentId,
+          courseId: courseId,
+          semesterId: semesterId,
+        }
+      );
+      setTimeout(()=>{
+        enqueueSnackbar(response.data.message, { variant: "success" });
+      },1000);
+
+      // Cập nhật lại danh sách registeredCourses sau khi hủy đăng ký môn học
+      fetchRegisteredCourses();
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Hủy đăng ký thất bại.", { variant: "error" });
+    }
+  };
+
   const handleRegisterCourse = async (e) => {
     e.preventDefault();
     try {
@@ -72,10 +121,11 @@ const StudentDashboard = () => {
           semesterId: semesterId,
         }
       );
-      enqueueSnackbar(response.data.message, { variant: "success" });
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      setTimeout(()=>{
+        enqueueSnackbar(response.data.message, { variant: "success" });
+      },1000)
+      fetchRegisteredCourses();
+      setSelectedCourses([]);
     } catch (error) {
       console.error(error);
       enqueueSnackbar("Đăng ký thất bại.", { variant: "error" });
@@ -87,10 +137,9 @@ const StudentDashboard = () => {
     if (selectedCourses.includes(courseId)) {
       setSelectedCourses(selectedCourses.filter((id) => id !== courseId)); // Nếu đã được chọn, loại bỏ khóa học khỏi danh sách
     } else {
-      setSelectedCourses([...selectedCourses, courseId]); // Nếu chưa được chọn, thêm khóa học vào danh sách
+      setSelectedCourses([courseId]); // Nếu chưa được chọn, thêm khóa học vào danh sách
     }
   };
-
   return (
     <div>
       <div>
@@ -187,9 +236,10 @@ const StudentDashboard = () => {
       <table className="selected-courses">
         <thead>
           <tr>
-          <th>Mã Môn Học</th>
+            <th>Mã Môn Học</th>
             <th>Tên Môn Học</th>
             <th>Số Tín Chỉ</th>
+            <th>Sỉ Số Tối Đa</th>
           </tr>
         </thead>
         <tbody>
@@ -200,17 +250,57 @@ const StudentDashboard = () => {
                 <td>{course.Course_ID}</td>
                 <td>{course.Course_Name}</td>
                 <td>{course.Credit_Hours}</td>
+                <td>{course.Max_Students}</td>
               </tr>
-              
             );
           })}
         </tbody>
       </table>
-      <button type="submit" onClick={handleRegisterCourse} style={{ marginLeft: 20, fontSize: 20 }}>
-            Đăng Kí
+      <button
+        type="submit"
+        onClick={handleRegisterCourse}
+        style={{ marginLeft: 20, fontSize: 20 }}
+      >
+        Đăng Kí
       </button>
-</div>
-);
+
+      <div>
+        <h2>Danh sách môn học đã đăng ký</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã Môn Học</th>
+              <th>Tên Môn Học</th>
+              <th>Số Tín Chỉ</th>
+              <th>Giảng Viên</th>
+              <th>Phòng Học</th>
+              <th>Học Phí</th> {/* Thêm cột học phí */}
+              <th>Ngày Đăng Kí</th>
+              <th>Hủy Đăng Kí</th>
+              {/* Thêm các cột khác nếu cần */}
+            </tr>
+          </thead>
+          <tbody>
+          {registeredCourses.map((course) => (
+              <tr key={course._id}>
+                <td>{course.Course_ID}</td>
+                <td>{course.Course_Name}</td>
+                <td>{course.Credit_Hours}</td>
+                <td>{course.Instructor}</td>
+                <td>{course.Classroom}</td>
+                <td>{course.Credit_Hours *  0.9}00.000</td>
+                <td>{new Date().toLocaleDateString()}</td>
+                <td>
+                  <button onClick={() => handleCancelRegistration(course._id)}>
+                    Hủy Đăng Ký
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 export default StudentDashboard;
-

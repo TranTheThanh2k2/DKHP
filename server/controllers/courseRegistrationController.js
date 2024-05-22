@@ -1,5 +1,5 @@
-
 const CourseRegistration = require('../models/CourseRegistration');
+const Course = require('../models/course');
 
 exports.registerCourse = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ exports.registerCourse = async (req, res) => {
     }
     const registration = new CourseRegistration({
       studentId: req.body.studentId,
-      courseId: req.body.courseId,
+      courseId: req.body.courseId,  
       semesterId: req.body.semesterId,
     });
     
@@ -26,23 +26,35 @@ exports.registerCourse = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 exports.getRegisteredCoursesBySemester = async (req, res) => {
   try {
-    const { studentId, semesterId } = req.body;
+    const { studentId, semesterId } = req.query;
 
-    // Tìm tất cả các bản ghi đăng ký môn học của sinh viên cho học kì đã chỉ định
+    // Lấy danh sách các đăng ký môn học
     const registeredCourses = await CourseRegistration.find({
-      studentId: studentId,
-      semesterId: semesterId,
+      studentId: studentId.trim(),
+      semesterId: semesterId.trim(),
     });
 
-    res.status(200).json(registeredCourses);
+    if (registeredCourses.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    // Lấy danh sách các courseId từ các đăng ký môn học
+    const courseId = registeredCourses.map(reg => reg.courseId);
+
+    // Lấy thông tin chi tiết của các môn học từ danh sách courseId
+    const courses = await Course.find({
+      _id: { $in: courseId },
+    });
+
+    res.status(200).json(courses);
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching registered courses by semester:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 exports.cancelCourseRegistration = async (req, res) => {
   try {
     const { studentId, courseId, semesterId } = req.body;

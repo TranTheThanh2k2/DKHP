@@ -83,3 +83,15 @@ exports.deleteCourse = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.getCoursesDetails = async (req, res) => {
+  try {
+    const courseIds = req.query.courseIds.split(','); 
+    const courses = await Course.find({ _id: { $in: courseIds } }); 
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

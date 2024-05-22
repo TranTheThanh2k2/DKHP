@@ -6,9 +6,8 @@ const courseRegistrationController = require('../controllers/courseRegistrationC
 
 router.post('/register', courseRegistrationController.registerCourse);
 
-router.post('/registeredCoursesBySemester', courseRegistrationController.getRegisteredCoursesBySemester);
 router.get('/registeredCoursesBySemester', courseRegistrationController.getRegisteredCoursesBySemester);
-router.delete('/cancelRegistration', courseRegistrationController.cancelCourseRegistration);
 
+router.post('/cancelCourseRegistration', courseRegistrationController.cancelCourseRegistration);
 
 module.exports = router;
