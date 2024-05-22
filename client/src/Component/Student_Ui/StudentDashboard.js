@@ -8,7 +8,6 @@ import toan from "../Student_Ui/style_student/h2.jpg";
 
 const StudentDashboard = () => {
   const [studentId, setStudentId] = useState("");
-  const [courseId, setCourseId] = useState("");
   const [semesterId, setSemesterId] = useState("");
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
@@ -16,7 +15,7 @@ const StudentDashboard = () => {
   const [hiddenStudentId, setHiddenStudentId] = useState("");
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null); // Change from array to single value
+  const [selectedCourses, setSelectedCourses] = useState([]); // Danh sách các khóa học được chọn
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -69,7 +68,7 @@ const StudentDashboard = () => {
         "http://localhost:3000/api/course/register",
         {
           studentId: studentId,
-          courseId: selectedCourse, // Update to single courseId
+          courseId: selectedCourses,
           semesterId: semesterId,
         }
       );
@@ -84,10 +83,11 @@ const StudentDashboard = () => {
   };
 
   const handleCheckboxChange = (courseId) => {
-    if (selectedCourse === courseId) {
-      setSelectedCourse(null);
+    // Kiểm tra xem courseId đã được chọn chưa
+    if (selectedCourses.includes(courseId)) {
+      setSelectedCourses(selectedCourses.filter((id) => id !== courseId)); // Nếu đã được chọn, loại bỏ khóa học khỏi danh sách
     } else {
-      setSelectedCourse(courseId);
+      setSelectedCourses([...selectedCourses, courseId]); // Nếu chưa được chọn, thêm khóa học vào danh sách
     }
   };
 
@@ -149,9 +149,6 @@ const StudentDashboard = () => {
               ))}
             </select>
           </label>
-          <button type="submit" style={{ marginLeft: 20, fontSize: 20 }}>
-            Đăng Kí
-          </button>
         </form>
       </div>
       <div className="sv6">
@@ -176,7 +173,7 @@ const StudentDashboard = () => {
               <td>
                 <input
                   type="checkbox"
-                  checked={selectedCourse === course._id}
+                  checked={selectedCourses.includes(course._id)}
                   onChange={() => handleCheckboxChange(course._id)}
                 />
               </td>
@@ -184,8 +181,36 @@ const StudentDashboard = () => {
           ))}
         </tbody>
       </table>
-    </div>
-  );
-};
 
+      {/* Bảng hiển thị thông tin các khóa học đã chọn */}
+      <h2>Các Khóa Học Đã Chọn</h2>
+      <table className="selected-courses">
+        <thead>
+          <tr>
+          <th>Mã Môn Học</th>
+            <th>Tên Môn Học</th>
+            <th>Số Tín Chỉ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedCourses.map((courseId) => {
+            const course = courses.find((course) => course._id === courseId);
+            return (
+              <tr key={course._id}>
+                <td>{course.Course_ID}</td>
+                <td>{course.Course_Name}</td>
+                <td>{course.Credit_Hours}</td>
+              </tr>
+              
+            );
+          })}
+        </tbody>
+      </table>
+      <button type="submit" onClick={handleRegisterCourse} style={{ marginLeft: 20, fontSize: 20 }}>
+            Đăng Kí
+      </button>
+</div>
+);
+};
 export default StudentDashboard;
+

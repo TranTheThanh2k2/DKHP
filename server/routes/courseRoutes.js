@@ -9,6 +9,8 @@ router.post('/', courseController.createCourse);
 // Lấy danh sách khóa học
 router.get('/', courseController.getCourses);
 
+router.get('/:id', courseController.getCourseById);
+
 router.get('/:semesterId/courses', courseController.getCoursesBySemester);
 
 // Cập nhật thông tin môn học
