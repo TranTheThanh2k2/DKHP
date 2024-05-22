@@ -32,6 +32,7 @@ app.use('/semesters', semesterRoutes);
 app.use(departmentRoutes);
 app.use('/api/course',courseRegister);
 app.use('/api/students', studentRoutes);
+
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Route not found' });
 });
