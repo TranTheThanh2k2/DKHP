@@ -58,20 +58,82 @@ const CourseForm = () => {
 
   const handleCreateCourse = async (e) => {
     e.preventDefault();
+    // Kiểm tra xem tất cả các trường dữ liệu đã được điền đầy đủ hay không
+    if (
+      !newCourse.Course_Name ||
+      !newCourse.Course_ID ||
+      !newCourse.Credit_Hours ||
+      !newCourse.Instructor ||
+      !newCourse.Classroom ||
+      !newCourse.Class_Time ||
+      !newCourse.Max_Students
+    ) {
+      // Nếu có trường dữ liệu nào bị để trống, hiển thị một cảnh báo và không thêm mới
+      alert("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+    // Biểu thức regex
+    const regexCourseName = /^[^\s].{1,100}$/;
+    const regexCourseID = /^[0-9]{3,10}$/;
+    const regexCreditHours = /^[1-9]\d*$/;
+    const regexInstructor = /^[A-Z][a-zA-Z\s]{1,49}$/;
+    const regexClassroom = /^.{1,50}$/;
+    const regexClassTime = /^.{1,50}$/;
+    const regexMaxStudents = /^[1-9]\d*$/;
+
+    // Kiểm tra từng trường dữ liệu
+    if (!regexCourseName.test(newCourse.Course_Name)) {
+      alert("Tên khóa học không hợp lệ.");
+      return;
+    }
+    if (!regexCourseID.test(newCourse.Course_ID)) {
+      alert("ID khóa học không hợp lệ.");
+      return;
+    }
+    if (!regexCreditHours.test(newCourse.Credit_Hours)) {
+      alert("Số tín chỉ không hợp lệ.");
+      return;
+    }
+    if (!regexInstructor.test(newCourse.Instructor)) {
+      alert("Tên giảng viên không hợp lệ.");
+      return;
+    }
+    if (!regexClassroom.test(newCourse.Classroom)) {
+      alert("Phòng học không hợp lệ.");
+      return;
+    }
+    if (!regexClassTime.test(newCourse.Class_Time)) {
+      alert("Thời gian học không hợp lệ.");
+      return;
+    }
+    if (!regexMaxStudents.test(newCourse.Max_Students)) {
+      alert("Số lượng sinh viên tối đa không hợp lệ.");
+      return;
+    }
+
+    // Kiểm tra mã khóa học đã tồn tại chưa
     try {
-      await axios.post("http://localhost:3000/courses", newCourse);
-      setNewCourse({
-        Course_Name: "",
-        Course_ID: "",
-        Credit_Hours: "",
-        Instructor: "",
-        Classroom: "",
-        Class_Time: "",
-        Department_Code: "",
-        Max_Students: "",
-        Semester_ID: "",
-      });
-      fetchCourses();
+      const existingCourse = courses.find(
+        (course) => course.Course_ID === newCourse.Course_ID
+      );
+      if (existingCourse) {
+        alert("Mã khóa học đã tồn tại, không thể thêm mới.");
+        return;
+      } else {
+        await axios.post("http://localhost:3000/courses", newCourse);
+        setNewCourse({
+          Course_Name: "",
+          Course_ID: "",
+          Credit_Hours: "",
+          Instructor: "",
+          Classroom: "",
+          Class_Time: "",
+          Department_Code: "",
+          Max_Students: "",
+          Semester_ID: "",
+        });
+        fetchCourses();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -269,133 +331,139 @@ const CourseForm = () => {
                 </tr>
                 {editingCourseId === course._id && (
                   <tr key={`${selectedCourse?._id}-edit`}>
-                  <td colSpan="6">
-                    <ul className="edit-course-form">
-                      <div>
-                        <form onSubmit={handleUpdateCourse}>
-                          <input
-                            type="text"
-                            value={selectedCourse?.Course_Name}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Course_Name: e.target.value,
-                              })
-                            }
-                            placeholder="Tên môn học"
-                          />
-                          <input
-                            type="text"
-                            value={selectedCourse?.Course_ID}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Course_ID: e.target.value,
-                              })
-                            }
-                            placeholder="ID môn học"
-                          />
-                          <input
-                            type="number"
-                            value={selectedCourse?.Credit_Hours}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Credit_Hours: e.target.value,
-                              })
-                            }
-                            placeholder="Số tín chỉ"
-                          />
-                          <input
-                            type="text"
-                            value={selectedCourse?.Instructor}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Instructor: e.target.value,
-                              })
-                            }
-                            placeholder="Giảng viên"
-                          />
-                          <input
-                            type="text"
-                            value={selectedCourse?.Classroom}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Classroom: e.target.value,
-                              })
-                            }
-                            placeholder="Phòng học"
-                          />
-                          <input
-                            type="text"
-                            value={selectedCourse?.Class_Time}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Class_Time: e.target.value,
-                              })
-                            }
-                            placeholder="Thời gian học"
-                          />
-            
-                          {/* Dropdown để chọn kỳ học */}
-                          <select
-                            value={selectedCourse?.Semester_ID}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Semester_ID: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="">Chọn kỳ học</option>
-                            {semesters.map((semester) => (
-                              <option key={semester._id} value={semester._id}>
-                                {semester.Semester_Name}
-                              </option>
-                            ))}
-                          </select>
-            
-                          {/* Dropdown để chọn phòng ban */}
-                          <select
-                            value={selectedCourse?.Department_Code}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Department_Code: e.target.value,
-                              })
-                            }
-                          >
-                            <option value="">Chọn phòng ban</option>
-                            {departments.map((department) => (
-                              <option key={department._id} value={department.Department_Code}>
-                                {department.Department_Name}
-                              </option>
-                            ))}
-                          </select>
-            
-                          <input
-                            type="number"
-                            value={selectedCourse?.Max_Students}
-                            onChange={(e) =>
-                              setSelectedCourse({
-                                ...selectedCourse,
-                                Max_Students: e.target.value,
-                              })
-                            }
-                            placeholder="Số lượng sinh viên tối đa"
-                          />
-                          <button type="submit">Cập nhật</button>
-                          <button onClick={() => setIsModalOpen(false)} className="close-button">
-                            Đóng
-                          </button>
-                        </form>
-                      </div>
-                    </ul>
-                  </td>
-                </tr>
+                    <td colSpan="6">
+                      <ul className="edit-course-form">
+                        <div>
+                          <form onSubmit={handleUpdateCourse}>
+                            <input
+                              type="text"
+                              value={selectedCourse?.Course_Name}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Course_Name: e.target.value,
+                                })
+                              }
+                              placeholder="Tên môn học"
+                            />
+                            <input
+                              type="text"
+                              value={selectedCourse?.Course_ID}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Course_ID: e.target.value,
+                                })
+                              }
+                              placeholder="ID môn học"
+                            />
+                            <input
+                              type="number"
+                              value={selectedCourse?.Credit_Hours}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Credit_Hours: e.target.value,
+                                })
+                              }
+                              placeholder="Số tín chỉ"
+                            />
+                            <input
+                              type="text"
+                              value={selectedCourse?.Instructor}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Instructor: e.target.value,
+                                })
+                              }
+                              placeholder="Giảng viên"
+                            />
+                            <input
+                              type="text"
+                              value={selectedCourse?.Classroom}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Classroom: e.target.value,
+                                })
+                              }
+                              placeholder="Phòng học"
+                            />
+                            <input
+                              type="text"
+                              value={selectedCourse?.Class_Time}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Class_Time: e.target.value,
+                                })
+                              }
+                              placeholder="Thời gian học"
+                            />
+
+                            {/* Dropdown để chọn kỳ học */}
+                            <select
+                              value={selectedCourse?.Semester_ID}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Semester_ID: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Chọn kỳ học</option>
+                              {semesters.map((semester) => (
+                                <option key={semester._id} value={semester._id}>
+                                  {semester.Semester_Name}
+                                </option>
+                              ))}
+                            </select>
+
+                            {/* Dropdown để chọn phòng ban */}
+                            <select
+                              value={selectedCourse?.Department_Code}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Department_Code: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Chọn phòng ban</option>
+                              {departments.map((department) => (
+                                <option
+                                  key={department._id}
+                                  value={department.Department_Code}
+                                >
+                                  {department.Department_Name}
+                                </option>
+                              ))}
+                            </select>
+
+                            <input
+                              type="number"
+                              value={selectedCourse?.Max_Students}
+                              onChange={(e) =>
+                                setSelectedCourse({
+                                  ...selectedCourse,
+                                  Max_Students: e.target.value,
+                                })
+                              }
+                              placeholder="Số lượng sinh viên tối đa"
+                            />
+                            <button type="submit">Cập nhật</button>
+                            <button
+                              onClick={() => setIsModalOpen(false)}
+                              className="close-button"
+                            >
+                              Đóng
+                            </button>
+                          </form>
+                        </div>
+                      </ul>
+                    </td>
+                  </tr>
                 )}
               </React.Fragment>
             ))}
