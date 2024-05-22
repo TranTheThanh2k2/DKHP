@@ -13,6 +13,8 @@ router.get('/:id', courseController.getCourseById);
 
 router.get('/:semesterId/courses', courseController.getCoursesBySemester);
 
+router.get('/details', courseController.getCoursesDetails);
+
 // Cập nhật thông tin môn học
 router.put('/:id', courseController.updateCourse);
 
