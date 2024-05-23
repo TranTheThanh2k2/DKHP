@@ -16,8 +16,11 @@ const StudentDashboard = () => {
   const [semesters, setSemesters] = useState([]);
   const [courses, setCourses] = useState([]);
   const [registeredCourses, setRegisteredCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]); // Danh sách các khóa học được chọn
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedClasses, setSelectedClasses] = useState([]);
+  const [selectedCourseClasses, setSelectedCourseClasses] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const [registeredClasses, setRegisteredClasses] = useState([]);
 
   useEffect(() => {
     const studentIdFromStorage = localStorage.getItem("studentID");
@@ -87,7 +90,17 @@ const StudentDashboard = () => {
       console.error(error);
     }
   };
-
+  const fetchRegisteredClassesBySemester = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/class/registered-classes/${studentId}/${semesterId}`
+      );
+      setRegisteredClasses(response.data.registeredClasses);
+      console.log(response.data.registeredClasses);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleCancelRegistration = async (courseId) => {
     try {
       const response = await axios.post(
@@ -102,7 +115,6 @@ const StudentDashboard = () => {
         enqueueSnackbar(response.data.message, { variant: "success" });
       }, 1000);
 
-      // Cập nhật lại danh sách registeredCourses sau khi hủy đăng ký môn học
       fetchRegisteredCourses();
     } catch (error) {
       console.error(error);
@@ -110,36 +122,91 @@ const StudentDashboard = () => {
     }
   };
 
-  const handleRegisterCourse = async (e) => {
-    e.preventDefault();
+  const handleRegisterClass = async (classId) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/course/register",
+        "http://localhost:3000/api/class/register",
         {
           studentId: studentId,
-          courseId: selectedCourses,
+          classId: classId,
+          courseId: selectedCourses.length > 0 ? selectedCourses[0] : null,
           semesterId: semesterId,
         }
       );
+      console.log(response.data);
       setTimeout(() => {
         enqueueSnackbar(response.data.message, { variant: "success" });
       }, 1000);
       fetchRegisteredCourses();
+      fetchCoursesBySemester(semesterId);
+      await fetchCourseClasses(selectedCourses[0]); // Update the list of classes for the selected course
       setSelectedCourses([]);
+      setSelectedClasses([]);  
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("Đăng ký thất bại.", { variant: "error" });
+      enqueueSnackbar("Đăng ký lớp học thất bại.", { variant: "error" });
     }
   };
 
-  const handleCheckboxChange = (courseId) => {
-    // Kiểm tra xem courseId đã được chọn chưa
+  const handleCheckboxChange = async (courseId) => {
     if (selectedCourses.includes(courseId)) {
-      setSelectedCourses(selectedCourses.filter((id) => id !== courseId)); // Nếu đã được chọn, loại bỏ khóa học khỏi danh sách
+      setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
+      setSelectedCourseClasses([]);
     } else {
-      setSelectedCourses([courseId]); // Nếu chưa được chọn, thêm khóa học vào danh sách
+      setSelectedCourses([courseId]);
+      await fetchCourseClasses(courseId);
     }
   };
+
+  const fetchCourseName = async (courseId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/courses/${courseId}`);
+      return response.data.Course_Name;
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  };
+
+  const fetchCourseClasses = async (courseId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/getClassesByCourse/${courseId}`);
+      const classes = response.data.classes;
+      const classesWithCourseName = await Promise.all(
+        classes.map(async (classItem) => {
+          const courseName = await fetchCourseName(classItem.courseId);
+          return { ...classItem, courseName };
+        })
+      );  
+      setSelectedCourseClasses(classesWithCourseName);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchClassDetails = async (classId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/${classId}`);
+      const classDetails = response.data;
+      setRegisteredClasses(prevClasses => prevClasses.map(classItem => {
+        if (classItem.classId === classId) {
+          return { ...classItem,Class_ID: classDetails.Class_ID,Classroom: classDetails.Classroom, Class_Name: classDetails.Class_Name, Instructor: classDetails.Instructor };
+        }
+        return classItem;
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    registeredClasses.forEach(classItem => {
+      fetchClassDetails(classItem.classId);
+    });
+  }, [registeredClasses]);
+  useEffect(() => {
+    if (studentId && semesterId) {
+      fetchRegisteredClassesBySemester();
+    }
+  }, [studentId, semesterId]);  
   return (
     <div>
       <div>
@@ -178,27 +245,24 @@ const StudentDashboard = () => {
         <h2>ĐĂNG KÝ HỌC PHẦN</h2>
       </div>
       <div className="sv5">
-        <form onSubmit={handleRegisterCourse}>
-          <input type="hidden" value={hiddenStudentId} />
-          <label style={{ fontSize: 20, fontWeight: "bold" }}>
-            Đợt Đăng Kí
-            <select
-              style={{ marginLeft: 20, fontSize: 20 }}
-              value={semesterId}
-              onChange={(e) => {
-                setSemesterId(e.target.value);
-                fetchCoursesBySemester(e.target.value);
-              }}
-            >
-              <option value="">-- Chọn học kỳ --</option>
-              {semesters.map((semester) => (
-                <option key={semester._id} value={semester._id}>
-                  {semester.Semester_Name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </form>
+        <label style={{ fontSize: 20, fontWeight: "bold" }}>
+          Đợt Đăng Kí
+          <select
+            style={{ marginLeft: 20, fontSize: 20 }}
+            value={semesterId}
+            onChange={(e) => {
+              setSemesterId(e.target.value);
+              fetchCoursesBySemester(e.target.value);
+            }}
+          >
+            <option value="">-- Chọn học kỳ --</option>
+            {semesters.map((semester) => (
+              <option key={semester._id} value={semester._id}>
+                {semester.Semester_Name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       <div className="sv6">
         <h2>Môn Học Phần Đang Chờ Đăng Ký</h2>
@@ -231,94 +295,73 @@ const StudentDashboard = () => {
         </tbody>
       </table>
 
-      {/* Bảng hiển thị thông tin các khóa học đã chọn */}
-      <div className="sv6">
-        <h2>Các Khóa Học Đã Chọn</h2>
-      </div>
-
-      <table className="selected-courses">
-        <thead>
-          <tr>
-            <th>Mã Môn Học</th>
-            <th>Tên Môn Học</th>
-            <th>Số Tín Chỉ</th>
-            <th>Sỉ Số Tối Đa</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {selectedCourses.map((courseId) => {
-            const course = courses.find((course) => course._id === courseId);
-            return (
-              <tr key={course._id}>
-                <td>{course.Course_ID}</td>
-                <td>{course.Course_Name}</td>
-                <td>{course.Credit_Hours}</td>
-                <td>{course.Max_Students}</td>
-                <td>
-                  <button
-                    className="btn-register"
-                    type="submit"
-                    onClick={handleRegisterCourse}
-                    style={{ marginLeft: 30, fontSize: 20 }}
-                  >
-                    Đăng Kí
-                  </button>
-                </td>
+      {selectedCourseClasses.length > 0 && (
+        <div>
+          <h3>Danh sách các lớp học tương ứng:</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên Môn Học</th>
+                <th>Mã Lớp HP</th>
+                <th>Tên Lớp HP</th>
+                <th>Giảng Viên</th>
+                <th>Phòng Học</th>
+                <th>Sỉ Số</th>
+                <th>Đăng ký</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      <div className="list-course">
-        <h2 className="sv6">Danh sách môn học đã đăng ký</h2>
-        <table className="list-course">
-          <thead>
-            <tr>
-              <th>Mã Môn Học</th>
-              <th>Tên Môn Học</th>
-              <th>Số Tín Chỉ</th>
-              <th>Giảng Viên</th>
-              <th>Phòng Học</th>
-              <th>Học Phí</th> {/* Thêm cột học phí */}
-              <th>Ngày Đăng Kí</th>
-              <th>Hủy Đăng Kí</th>
-              {/* Thêm các cột khác nếu cần */}
-            </tr>
-          </thead>
-          <tbody>
-            {registeredCourses.map((course) => (
-              <tr key={course._id}>
-                <td>{course.Course_ID}</td>
-                <td>{course.Course_Name}</td>
-                <td>{course.Credit_Hours}</td>
-                <td>{course.Instructor}</td>
-                <td>{course.Classroom}</td>
-                <td>{course.Credit_Hours * 0.9}00.000</td>
-                <td>{new Date().toLocaleDateString()}</td>
-                <td>
-                  <button onClick={() => handleCancelRegistration(course._id)}>
-                    Hủy Đăng Ký
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <footer style={{ backgroundColor: "white" }}>
-          <div className="footer">
-            <p>&copy; 2024 Trường Đại học Công nghiệp TP. Hồ Chí Minh</p>
-            <p>
-              Địa chỉ: Số 12 Nguyễn Văn Bão, Phường 4, Quận Gò Vấp, TP. Hồ Chí
-              Minh
-            </p>
-            <p>Điện thoại: 0326026288</p>
-            <p>Email: toanlemale11234@gmail.com</p>
-          </div>
-        </footer>
-      </div>
+            </thead>
+            <tbody>
+              {selectedCourseClasses.map((classItem, index) => (
+                <tr key={classItem._id}>
+                  <td>{index + 1}</td>
+                  <td>{classItem.courseName}</td>
+                  <td>{classItem.Class_ID}</td>
+                  <td>{classItem.Class_Name}</td>
+                  <td>{classItem.Instructor}</td>
+                  <td>{classItem.Classroom}</td>
+                  <td>{classItem.Max_Students}</td>
+                  <td>
+                    <button
+                      onClick={() => handleRegisterClass(classItem._id)}
+                    >
+                      Đăng ký
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div>
+  <h2>Danh sách lớp học đã đăng ký</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Mã LHP</th>
+        <th>Tên lớp học </th>
+        <th>Giảng viên</th>
+        <th>Phòng Học</th>
+        {/* Thêm các cột khác nếu cần */}
+      </tr>
+    </thead>
+    <tbody>
+      {registeredClasses.map((classItem) => (
+        <tr key={classItem._id}>
+          <td>{classItem.Class_ID}</td>
+          <td>{classItem.Class_Name}</td>
+          <td>{classItem.Instructor}</td>
+          <td>{classItem.Classroom}</td>
+          {/* Thêm các ô dữ liệu khác nếu cần */}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
     </div>
+    
   );
 };
+
 export default StudentDashboard;
