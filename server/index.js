@@ -7,7 +7,9 @@ const courseRoutes = require('./routes/courseRoutes');
 const semesterRoutes = require ('./routes/semesterRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const courseRegister = require ('./routes/courseRegistrationRoutes');
+const classRegister = require('./routes/classRegistrationRoutes');
 const studentRoutes = require('./routes/studentRoutes');
+const classRoutes = require ('./routes/classRoutes');
 const cors = require('cors');
 const app = express();
 const PORT =  3000;
@@ -32,6 +34,8 @@ app.use('/semesters', semesterRoutes);
 app.use(departmentRoutes);
 app.use('/api/course',courseRegister);
 app.use('/api/students', studentRoutes);
+app.use('/api',classRoutes);
+app.use('/api/class',classRegister);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Route not found' });
