@@ -52,7 +52,7 @@ th,
 td {
   padding: 8px;
   text-align: left;
-}
+} 
 
 th {
   background-color: #3399ff;
@@ -63,15 +63,32 @@ th {
   border-collapse: collapse;
   margin-left: 150px;
 }
-.btn-register{
+.btn-register {
   background-color: #0099ff;
   color: aliceblue;
   padding: 10px;
   border-radius: 5px;
-  
 }
-.list-course{
+.list-course {
   width: 90%;
   border-collapse: collapse;
-  margin-left: 72px ; 
+  margin-left: 72px;
+}
+
+/* style danh sach mon hoc */
+.tableListCoures-1 {
+  display: flex;
+  width: 80%;
+  border-collapse: collapse;
+  margin-left: 150px;
+  flex-direction: column;
+}
+/* style danh sach lop hoc tuong ung */
+.tableListCoures-2{
+  display: flex;
+  width: 80%;
+  border-collapse: collapse;
+  margin-left: 150px;
+  flex-direction: column;
+
 }

@@ -141,7 +141,7 @@ const StudentDashboard = () => {
       fetchCoursesBySemester(semesterId);
       await fetchCourseClasses(selectedCourses[0]); // Update the list of classes for the selected course
       setSelectedCourses([]);
-      setSelectedClasses([]);  
+      setSelectedClasses([]);
     } catch (error) {
       console.error(error);
       enqueueSnackbar("Đăng ký lớp học thất bại.", { variant: "error" });
@@ -160,7 +160,9 @@ const StudentDashboard = () => {
 
   const fetchCourseName = async (courseId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/courses/${courseId}`);
+      const response = await axios.get(
+        `http://localhost:3000/courses/${courseId}`
+      );
       return response.data.Course_Name;
     } catch (error) {
       console.error(error);
@@ -170,14 +172,16 @@ const StudentDashboard = () => {
 
   const fetchCourseClasses = async (courseId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/getClassesByCourse/${courseId}`);
+      const response = await axios.get(
+        `http://localhost:3000/api/getClassesByCourse/${courseId}`
+      );
       const classes = response.data.classes;
       const classesWithCourseName = await Promise.all(
         classes.map(async (classItem) => {
           const courseName = await fetchCourseName(classItem.courseId);
           return { ...classItem, courseName };
         })
-      );  
+      );
       setSelectedCourseClasses(classesWithCourseName);
     } catch (error) {
       console.error(error);
@@ -187,18 +191,26 @@ const StudentDashboard = () => {
     try {
       const response = await axios.get(`http://localhost:3000/api/${classId}`);
       const classDetails = response.data;
-      setRegisteredClasses(prevClasses => prevClasses.map(classItem => {
-        if (classItem.classId === classId) {
-          return { ...classItem,Class_ID: classDetails.Class_ID,Classroom: classDetails.Classroom, Class_Name: classDetails.Class_Name, Instructor: classDetails.Instructor };
-        }
-        return classItem;
-      }));
+      setRegisteredClasses((prevClasses) =>
+        prevClasses.map((classItem) => {
+          if (classItem.classId === classId) {
+            return {
+              ...classItem,
+              Class_ID: classDetails.Class_ID,
+              Classroom: classDetails.Classroom,
+              Class_Name: classDetails.Class_Name,
+              Instructor: classDetails.Instructor,
+            };
+          }
+          return classItem;
+        })
+      );
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    registeredClasses.forEach(classItem => {
+    registeredClasses.forEach((classItem) => {
       fetchClassDetails(classItem.classId);
     });
   }, [registeredClasses]);
@@ -206,7 +218,7 @@ const StudentDashboard = () => {
     if (studentId && semesterId) {
       fetchRegisteredClassesBySemester();
     }
-  }, [studentId, semesterId]);  
+  }, [studentId, semesterId]);
   return (
     <div>
       <div>
@@ -296,8 +308,8 @@ const StudentDashboard = () => {
       </table>
 
       {selectedCourseClasses.length > 0 && (
-        <div>
-          <h3>Danh sách các lớp học tương ứng:</h3>
+        <div className="tableListCoures-2">
+          <h3 className="sv6">Danh sách các lớp học tương ứng:</h3>
           <table>
             <thead>
               <tr>
@@ -322,9 +334,7 @@ const StudentDashboard = () => {
                   <td>{classItem.Classroom}</td>
                   <td>{classItem.Max_Students}</td>
                   <td>
-                    <button
-                      onClick={() => handleRegisterClass(classItem._id)}
-                    >
+                    <button onClick={() => handleRegisterClass(classItem._id)}>
                       Đăng ký
                     </button>
                   </td>
@@ -334,33 +344,32 @@ const StudentDashboard = () => {
           </table>
         </div>
       )}
-      <div>
-  <h2>Danh sách lớp học đã đăng ký</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Mã LHP</th>
-        <th>Tên lớp học </th>
-        <th>Giảng viên</th>
-        <th>Phòng Học</th>
-        {/* Thêm các cột khác nếu cần */}
-      </tr>
-    </thead>
-    <tbody>
-      {registeredClasses.map((classItem) => (
-        <tr key={classItem._id}>
-          <td>{classItem.Class_ID}</td>
-          <td>{classItem.Class_Name}</td>
-          <td>{classItem.Instructor}</td>
-          <td>{classItem.Classroom}</td>
-          {/* Thêm các ô dữ liệu khác nếu cần */}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+      <div className="tableListCoures-1">
+        <h2 className="sv6">Danh sách lớp học đã đăng ký</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Mã LHP</th>
+              <th>Tên lớp học </th>
+              <th>Giảng viên</th>
+              <th>Phòng Học</th>
+              {/* Thêm các cột khác nếu cần */}
+            </tr>
+          </thead>
+          <tbody>
+            {registeredClasses.map((classItem) => (
+              <tr key={classItem._id}>
+                <td>{classItem.Class_ID}</td>
+                <td>{classItem.Class_Name}</td>
+                <td>{classItem.Instructor}</td>
+                <td>{classItem.Classroom}</td>
+                {/* Thêm các ô dữ liệu khác nếu cần */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-    
   );
 };
 
