@@ -3,6 +3,7 @@ import "./AdminDashboard.css"; // Import CSS file for styling
 import CourseForm from "./Form_Admin/CourseForm";
 import SemesterForm from "./Form_Admin/SemesterForm";
 import DepartmentForm from "./Form_Admin/DepartmentForm";
+import ClassForm from "./Form_Admin/ClassForm";
 
 const AdminDashboard = () => {
   const [selectedContent, setSelectedContent] = useState('');
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
       <h2>Menu </h2>
         <ul>
           <li onClick={() => handleMenuClick("manage-courses")}>Quản Lý Môn Học</li>
+          <li onClick={() => handleMenuClick("manage-classes")}>Quản Lý Lớp Học</li>
           <li onClick={() => handleMenuClick("manage-semesters")}>Quản Lý Học Kỳ</li>
           <li onClick={() => handleMenuClick("manage-departments")}>Quản Lý Khoa</li>
         </ul>
@@ -25,6 +27,7 @@ const AdminDashboard = () => {
         <h2>Trang Giao Diện của Admin</h2>
         {/* Render the selected content */}
         {selectedContent === "manage-courses" && <CourseForm />}
+        {selectedContent === "manage-classes" && < ClassForm/>}
         {selectedContent === "manage-semesters" && <SemesterForm />}
         {selectedContent === "manage-departments" && <DepartmentForm />}
       </div>
