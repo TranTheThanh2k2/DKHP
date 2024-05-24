@@ -94,7 +94,9 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button className="button" type="submit">Đăng nhập</button>
+            <button className="button" type="submit">
+              Đăng nhập
+            </button>
           </form>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
         </div>
