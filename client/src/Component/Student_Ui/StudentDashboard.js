@@ -200,6 +200,7 @@ const StudentDashboard = () => {
               Classroom: classDetails.Classroom,
               Class_Name: classDetails.Class_Name,
               Instructor: classDetails.Instructor,
+              status : classDetails.status
             };
           }
           return classItem;
@@ -320,6 +321,7 @@ const StudentDashboard = () => {
                 <th>Giảng Viên</th>
                 <th>Phòng Học</th>
                 <th>Sỉ Số</th>
+                <th>Trang Thái</th>
                 <th>Đăng ký</th>
               </tr>
             </thead>
@@ -333,6 +335,7 @@ const StudentDashboard = () => {
                   <td>{classItem.Instructor}</td>
                   <td>{classItem.Classroom}</td>
                   <td>{classItem.Max_Students}</td>
+                  <td>{classItem.status}</td>
                   <td>
                     <button onClick={() => handleRegisterClass(classItem._id)}>
                       Đăng ký
@@ -363,6 +366,7 @@ const StudentDashboard = () => {
                 <td>{classItem.Class_Name}</td>
                 <td>{classItem.Instructor}</td>
                 <td>{classItem.Classroom}</td>
+                
                 {/* Thêm các ô dữ liệu khác nếu cần */}
               </tr>
             ))}
