@@ -6,7 +6,6 @@ const courseController = require('../controllers/courseController');
 router.post('/', courseController.createCourse);
 
 
-// Lấy danh sách khóa học
 router.get('/', courseController.getCourses);
 
 router.get('/:id', courseController.getCourseById);

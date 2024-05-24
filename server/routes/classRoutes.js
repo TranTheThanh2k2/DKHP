@@ -4,7 +4,7 @@ const router = express.Router();
 const classController = require('../controllers/classController');
 
 router.post('/addClass', classController.addClass);
-
+router.get('/getAllClasses', classController.getAllClasses);
 router.get('/:classId', classController.getClassDetails);
 
 router.get('/getClassesByCourse/:courseId', classController.getClassesByCourse);

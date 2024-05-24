@@ -7,8 +7,6 @@ const Student = require('../models/student');
 exports.createUserAndStudent = async (req, res) => {
     try {
       const { email, password, studentInfo, isAdmin } = req.body;
-  
-      // Kiểm tra xem người dùng đăng ký có phải là admin hay không
       if (!isAdmin) {
         // Nếu không phải là admin, tạo cả user và student
         const existingUser = await User.findOne({ email });

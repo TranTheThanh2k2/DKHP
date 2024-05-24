@@ -18,7 +18,6 @@ exports.createStudent = async (req, res) => {
   }
 };
 
-// Controller để lấy tất cả sinh viên
 exports.getAllStudents = async (req, res) => {
   try {
     const students = await Student.find();
