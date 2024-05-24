@@ -12,7 +12,7 @@ const SemesterForm = () => {
     Start_Date: "",
     End_Date: "",
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ setIsModalOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [editingSemesterId, setEditingSemesterId] = useState(null);
 
