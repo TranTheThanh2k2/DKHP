@@ -25,7 +25,7 @@ const AdminDashboard = () => {
       </div>
       <div className="main-content">
         <h2>Trang Giao Diện của Admin</h2>
-        {/* Render the selected content */}
+        {/* Render the selected content */} 
         {selectedContent === "manage-courses" && <CourseForm />}
         {selectedContent === "manage-classes" && < ClassForm/>}
         {selectedContent === "manage-semesters" && <SemesterForm />}

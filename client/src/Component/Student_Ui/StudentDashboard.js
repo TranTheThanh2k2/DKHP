@@ -147,12 +147,15 @@ const StudentDashboard = () => {
       enqueueSnackbar("Đăng ký lớp học thất bại.", { variant: "error" });
     }
   };
-
   const handleCheckboxChange = async (courseId) => {
+    // Kiểm tra nếu môn học đã được chọn
     if (selectedCourses.includes(courseId)) {
-      setSelectedCourses(selectedCourses.filter((id) => id !== courseId));
+      // Nếu đã được chọn, hủy bỏ chọn môn học
+      setSelectedCourses([]);
+      // Đồng thời cũng làm sạch danh sách các lớp học tương ứng
       setSelectedCourseClasses([]);
     } else {
+      // Nếu chưa được chọn, thực hiện chọn môn học
       setSelectedCourses([courseId]);
       await fetchCourseClasses(courseId);
     }

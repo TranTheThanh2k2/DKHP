@@ -1,29 +1,28 @@
-const  Class = require("../models/class");
+const Class = require("../models/class");
 
 const getClassDetails = async (req, res) => {
     try {
       const classId = req.params.classId;
-      const classDetails = await Class.findOne({ _id: classId }); // Tìm lớp học bằng _id
+      const classDetails = await Class.findOne({ _id: classId });
       if (!classDetails) {
         return res.status(404).json({ message: 'Lớp học không được tìm thấy' });
       }
-      res.status(200).json(classDetails); // Trả về chi tiết của lớp học
+      res.status(200).json(classDetails);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 };
 
-
 const getClassesByCourse = async (req, res) => {
   try {
     const { courseId } = req.params;
     const classes = await Class.find({ courseId });
 
-    if (!classes) {
+    if (!classes || classes.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Classes not found",
+        message: "Không tìm thấy lớp học cho khóa học này",
       });
     }
 
@@ -35,15 +34,14 @@ const getClassesByCourse = async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: "Server error",
+      message: "Lỗi máy chủ",
     });
   }
 };
 
-// Thêm lớp học mới
 const addClass = async (req, res) => {
   try {
-    const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status } = req.body;
+    const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule } = req.body;
 
     const newClass = new Class({
       Class_ID,
@@ -52,7 +50,10 @@ const addClass = async (req, res) => {
       Classroom,
       Max_Students,
       courseId,
-      status
+      status,
+      startDate,
+      endDate,
+      schedule
     });
 
     await newClass.save();
@@ -62,70 +63,92 @@ const addClass = async (req, res) => {
   }
 };
 
-// Xóa lớp học
 const deleteClass = async (req, res) => {
   try {
     const { id } = req.params;
 
     const deletedClass = await Class.findByIdAndDelete(id);
 
-    if (!deletedClass) {z
+    if (!deletedClass) {
       return res.status(404).json({
         success: false,
-        message: "Class not found",
+        message: "Không tìm thấy lớp học",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Class deleted successfully",
+      message: "Lớp học đã được xóa thành công",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: "Server error",
+      message: "Lỗi máy chủ",
     });
   }
 };
 
-// Cập nhật lớp học
 const updateClass = async (req, res) => {
   try {
     const { id } = req.params;
-    const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status } = req.body;
+    const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule } = req.body;
 
     const updatedClass = await Class.findByIdAndUpdate(
       id,
-      { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status },
+      { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule },
       { new: true }
     );
 
     if (!updatedClass) {
       return res.status(404).json({
         success: false,
-        message: "Class not found",
+        message: "Không tìm thấy lớp học",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Class updated successfully",
+      message: "Lớp học đã được cập nhật thành công",
       updatedClass,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: "Server error",
+      message: "Lỗi máy chủ",
     });
   }
 };
+const getAllClasses = async (req, res) => {
+  try {
+    
+    const classes = await Class.find();
+    
+    if (!classes || classes.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy lớp học",
+      });
+    }
 
+    res.status(200).json({
+      success: true,
+      classes,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi máy chủ",
+    });
+  }
+};
 module.exports = {
   getClassesByCourse,
   addClass,
   deleteClass,
   updateClass,
   getClassDetails,
+  getAllClasses,
 };

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const classSchema = new mongoose.Schema({
+const classSchema = new Schema({
   Class_ID: {
     type: String,
     required: true,
@@ -29,8 +30,30 @@ const classSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["chờ sinh viên đăng kí", "đã mở lớp", "đã khóa"],
-    default: "chờ sinh viên đăng kí"
-  }
-});
+    default: "chờ sinh viên đăng kí",
+  },
+  startDate: {
+    type: Date,
+    required: true,
+  },
+  endDate: {
+    type: Date,
+    required: true,
+  },
+  schedule: {
+    dayOfWeek: {
+      type: String,
+      enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      required: true,
+    },
+    timeSlot: {
+      type: String,
+      enum: ["1-3", "4-6", "7-9", "10-12"],
+      required: true,
+    },
+  }, 
+}, { timestamps: true });
 
-module.exports = mongoose.model("Class", classSchema);
+const Class = mongoose.model("Class", classSchema);
+
+module.exports = Class;
