@@ -7,6 +7,7 @@ import CourseForm from './Component/Admin_Ui/Form_Admin/CourseForm';
 import DepartmentForm from './Component/Admin_Ui/Form_Admin/DepartmentForm';
 import SemesterForm from './Component/Admin_Ui/Form_Admin/SemesterForm';
 import AdminDashboard from './Component/Admin_Ui/AdminDashboard';
+import Schedule from './Component/Student_Ui/Schedule';
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/manage-courses" element={<CourseForm />} />
           <Route path="/manage-semesters" element={<SemesterForm />} />
           <Route path="/manage-departments" element={<DepartmentForm />} />
+          <Route path="/schedule/" element={<Schedule />} />
         </Routes>
       </Router>
     </SnackbarProvider>

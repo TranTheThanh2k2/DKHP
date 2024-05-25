@@ -1,5 +1,18 @@
 const Class = require("../models/class");
 
+const getClassSchedule = async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const classDetails = await Class.findOne({ _id: classId }, 'schedule');
+    if (!classDetails) {
+      return res.status(404).json({ message: 'Lớp học không được tìm thấy' });
+    }
+    res.status(200).json(classDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Lỗi máy chủ' });
+  }
+};
 const getClassDetails = async (req, res) => {
     try {
       const classId = req.params.classId;
@@ -151,4 +164,5 @@ module.exports = {
   updateClass,
   getClassDetails,
   getAllClasses,
+  getClassSchedule,
 };

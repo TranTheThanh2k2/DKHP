@@ -5,6 +5,7 @@ import "./style_student/Studentboard.css";
 
 import iuh1 from "../Student_Ui/style_student/iu1.png";
 import toan from "../Student_Ui/style_student/h2.jpg";
+import {useNavigate } from "react-router";
 
 const StudentDashboard = () => {
   const [studentId, setStudentId] = useState("");
@@ -21,6 +22,7 @@ const StudentDashboard = () => {
   const [selectedCourseClasses, setSelectedCourseClasses] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
   const [registeredClasses, setRegisteredClasses] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const studentIdFromStorage = localStorage.getItem("studentID");
@@ -101,27 +103,6 @@ const StudentDashboard = () => {
       console.error(error);
     }
   };
-  const handleCancelRegistration = async (courseId) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/course/cancelCourseRegistration",
-        {
-          studentId: studentId,
-          courseId: courseId,
-          semesterId: semesterId,
-        }
-      );
-      setTimeout(() => {
-        enqueueSnackbar(response.data.message, { variant: "success" });
-      }, 1000);
-
-      fetchRegisteredCourses();
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar("Hủy đăng ký thất bại.", { variant: "error" });
-    }
-  };
-
   const handleRegisterClass = async (classId) => {
     try {
       const response = await axios.post(
@@ -252,7 +233,7 @@ const StudentDashboard = () => {
           />
         </div>
         <div className="sv3">
-          <p>THÔNG TIN SINH VIÊN</p>
+        <p onClick={() => navigate("/schedule")} style={{cursor: "pointer", textDecoration: "underline"}}>Xem Lịch Học</p> {/* Thêm liên kết điều hướng */}
           <p>ĐĂNG KÝ HỌC PHẦN</p>
           <p>CHƯƠNG TRÌNH KHUNG</p>
         </div>

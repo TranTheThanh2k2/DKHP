@@ -1,6 +1,42 @@
 const ClassRegistration = require('../models/ClassRegistration');
 const Class = require('../models/class');
 
+exports.getClassSchedulesBySemester = async (req, res) => {
+  try {
+    const { semesterId } = req.params;
+
+    const registeredClasses = await ClassRegistration.find({ semesterId }).populate({
+      path: 'classId',
+
+    });
+    console.log(registeredClasses); // Kiểm tra xem thông tin lịch học đã được populate chưa
+
+    const schedulesByDay = {
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+      Sunday: []
+    };
+
+    registeredClasses.forEach((registration) => {
+      if (registration.classId && registration.classId.schedule) {
+        const { schedule } = registration.classId;
+        console.log(schedule); // In ra giá trị của schedule để kiểm tra
+
+        // Tiếp tục xử lý các thông tin khác và push vào schedulesByDay
+      }
+    });
+
+    res.status(200).json({ success: true, schedulesByDay });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi lấy lịch học của các lớp đăng ký trong học kỳ' });
+  }
+};
+
 exports.getRegisteredClassesBySemester = async (req, res) => {
   try {
     const { studentId, semesterId } = req.params;
@@ -13,6 +49,7 @@ exports.getRegisteredClassesBySemester = async (req, res) => {
     res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi lấy danh sách lớp học đã đăng ký' });
   }
 };
+
 exports.registerClass = async (req, res) => {
   try {
     const { studentId, classId, courseId, semesterId } = req.body;
