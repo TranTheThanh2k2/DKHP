@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-modal";
+import "./style_admin/StudentForm.css";
 
 const StudentForm = () => {
   const [students, setStudents] = useState([]);
@@ -108,175 +109,191 @@ const StudentForm = () => {
   };
 
   return (
-    <div>
-      <h1>Student</h1>
+    <div className="ccc">
+      <h1 style={{ display: "flex", justifyContent: "center" }}>Student</h1>
 
       <form onSubmit={createUserAndStudent}>
-        <table>
-          <thead>
-            <tr>
-              <th>Mã sinh viên</th>
-              <th>Tên Sinh Viên</th>
-              <th>Email</th>
-              <th>Mật khẩu</th>
-              <th>email dùng để đăng nhập</th>
-              <th>Số Điện Thoại</th>
-              <th>Địa chỉ</th>
-              <th>Ngày sinh</th>
-              <th>Giới tính</th>
-              <th>Khoa</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Student_ID}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Student_ID: e.target.value,
-                    })
-                  }
-                  placeholder="ID sinh viên"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Full_Name}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Full_Name: e.target.value,
-                    })
-                  }
-                  placeholder="Tên sinh viên"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Email}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Email: e.target.value,
-                    })
-                  }
-                  placeholder="Email"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="password"
-                  value={newStudent.password}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      password: e.target.value,
-                    })
-                  }
-                  placeholder="Mật khẩu"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.email}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      email: e.target.value,
-                    })
-                  }
-                  placeholder="email dùng để đăng nhập"
-                  className="student-eamil-1"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Phone_Number}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Phone_Number: e.target.value,
-                    })
-                  }
-                  placeholder="Số điện thoại"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Address}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Address: e.target.value,
-                    })
-                  }
-                  placeholder="Địa chỉ"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="date"
-                  value={newStudent.Date_of_Birth}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Date_of_Birth: e.target.value,
-                    })
-                  }
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Gender}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Gender: e.target.value,
-                    })
-                  }
-                  placeholder="Giới tính"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  value={newStudent.Department_Code}
-                  onChange={(e) =>
-                    setNewStudent({
-                      ...newStudent,
-                      Department_Code: e.target.value,
-                    })
-                  }
-                  placeholder="Khoa"
-                  className="student-input"
-                />
-              </td>
-              <td>
-                <button type="submit" className="submit-button">
-                  Tạo mới
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="cc1">
+          <table>
+            <thead>
+              <tr>
+                <th>Mã sinh viên</th>
+                <th>Tên Sinh Viên</th>
+                <th>Email</th>
+                <th>Mật khẩu</th>
+                <th>Email Đăng Nhập</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Student_ID}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Student_ID: e.target.value,
+                      })
+                    }
+                    placeholder="ID sinh viên"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Full_Name}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Full_Name: e.target.value,
+                      })
+                    }
+                    placeholder="Tên sinh viên"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Email}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Email: e.target.value,
+                      })
+                    }
+                    placeholder="Email"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="password"
+                    value={newStudent.password}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        password: e.target.value,
+                      })
+                    }
+                    placeholder="Mật khẩu"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.email}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        email: e.target.value,
+                      })
+                    }
+                    placeholder="email dùng để đăng nhập"
+                    className="student-eamil-1"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="cc2">
+          <table>
+            <thead>
+              <tr>
+                <th>Số Điện Thoại</th>
+                <th>Địa chỉ</th>
+                <th>Ngày sinh</th>
+                <th>Giới tính</th>
+                <th>Khoa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Phone_Number}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Phone_Number: e.target.value,
+                      })
+                    }
+                    placeholder="Số điện thoại"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Address}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Address: e.target.value,
+                      })
+                    }
+                    placeholder="Địa chỉ"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    value={newStudent.Date_of_Birth}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Date_of_Birth: e.target.value,
+                      })
+                    }
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Gender}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Gender: e.target.value,
+                      })
+                    }
+                    placeholder="Giới tính"
+                    className="student-input"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={newStudent.Department_Code}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        Department_Code: e.target.value,
+                      })
+                    }
+                    placeholder="Khoa"
+                    className="student-input"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>{" "}
+        </div>
+        <div className="cc3">
+          <td>
+            <button type="submit" className="submit-button">
+              Tạo mới
+            </button>
+          </td>
+        </div>
+
         {notification && <div className="notification">{notification}</div>}
       </form>
       <table>
@@ -309,11 +326,27 @@ const StudentForm = () => {
                 <td>{student.Gender}</td>
                 <td>{student.Department_Code}</td>
                 <td>{role}</td>
-                <td>
-                  <button onClick={() => handleEditStudent(student)}>
+                <td
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <button
+                    style={{ fontSize: 20, backgroundColor: "#0099FF" }}
+                    onClick={() => handleEditStudent(student)}
+                  >
                     Edit
                   </button>
-                  <button onClick={() => handleDeleteStudent(student._id)}>
+                  <button
+                    style={{
+                      fontSize: 15,
+                      marginTop: 10,
+                      backgroundColor: "#0099FF",
+                    }}
+                    onClick={() => handleDeleteStudent(student._id)}
+                  >
                     Delete
                   </button>
                 </td>
