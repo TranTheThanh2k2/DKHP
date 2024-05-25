@@ -1,0 +1,28 @@
+
+.ccc{
+    background-color: #f7f7f7; 
+    border-radius: 10px;
+}
+.cc1{
+    display: flex;
+    justify-content: center;
+    
+}
+.cc2 {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+    
+}
+.cc3{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.cc2 th {
+    width: 170px;
+}
+.cc1 th {
+    width: 120px;
+}
+

@@ -1,0 +1,24 @@
+.aaa{
+    background-color: #f7f7f7; 
+    border-radius: 10px;
+}
+.aa1{
+    display: flex;
+    justify-content: center;
+}
+.aa2{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.aa2 th{
+    width: 210px;
+}
+.aa3{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    
+}
+

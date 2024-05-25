@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import "./style_admin/ClassForm.css";
 
 const ClassForm = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -134,144 +135,198 @@ const ClassForm = () => {
   };
 
   return (
-    <div>
+    <div className="aaa">
       <form onSubmit={handleSubmit}>
-        <h2>Thêm Lớp Học</h2>
-        <div>
-          <label>Mã Lớp Học:</label>
-          <input
-            type="text"
-            name="Class_ID"
-            value={classData.Class_ID}
-            onChange={handleChange}
-            required
-          />
+        <h2
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            color: "#FFCC00",
+          }}
+        >
+          Thêm Lớp Học
+        </h2>
+        <div className="aa1">
+          <table>
+            <thead>
+              <tr>
+                <th>Mã Lớp Học</th>
+                <th>Tên Lớp Học</th>
+                <th>Giảng Viên</th>
+                <th>Phòng Học</th>
+                <th>Sỉ Số</th>
+                <th>Môn Học</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    name="Class_ID"
+                    value={classData.Class_ID}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="Class_Name"
+                    value={classData.Class_Name}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="Instructor"
+                    value={classData.Instructor}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="Classroom"
+                    value={classData.Classroom}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="Max_Students"
+                    value={classData.Max_Students}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <select
+                    name="courseId"
+                    value={classData.courseId}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">-- Chọn Môn Học --</option>
+                    {courses.map((course) => (
+                      <option key={course._id} value={course._id}>
+                        {course.Course_Name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div>
-          <label>Tên Lớp Học:</label>
-          <input
-            type="text"
-            name="Class_Name"
-            value={classData.Class_Name}
-            onChange={handleChange}
-            required
-          />
+        <div className="aa2">
+          <table>
+            <thead>
+              <tr>
+                <th>Trạng Thái</th>
+                <th>Ngày Bắt Đầu</th>
+                <th>Ngày Kết Thúc</th>
+                <th>Ngày Học</th>
+                <th>Thời Gian Học</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <select
+                    name="status"
+                    value={classData.status}
+                    onChange={handleChange}
+                  >
+                    <option value="chờ sinh viên đăng kí">
+                      Chờ Sinh Viên Đăng Kí
+                    </option>
+                    <option value="đã mở lớp">Đã Mở Lớp</option>
+                    <option value="đã khóa">Đã Khóa</option>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    name="startDate"
+                    value={classData.startDate}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    name="endDate"
+                    value={classData.endDate}
+                    onChange={handleChange}
+                    required
+                  />
+                </td>
+                <td>
+                  <select
+                    name="dayOfWeek"
+                    value={classData.dayOfWeek}
+                    onChange={handleChange} // Thay đổi handleChange thành handleScheduleChange
+                    required
+                  >
+                    <option value="">-- Chọn Ngày Học --</option>
+                    <option value="Monday">Thứ Hai</option>
+                    <option value="Tuesday">Thứ Ba</option>
+                    <option value="Wednesday">Thứ Tư</option>
+                    <option value="Thursday">Thứ Năm</option>
+                    <option value="Friday">Thứ Sáu</option>
+                    <option value="Saturday">Thứ Bảy</option>
+                    <option value="Sunday">Chủ Nhật</option>
+                  </select>
+                </td>
+                <td>
+                  <select
+                    name="timeSlot"
+                    value={classData.timeSlot}
+                    onChange={handleChange} // Thay đổi handleChange thành handleScheduleChange
+                  >
+                    <option value="">-- Chọn Thời Gian Học --</option>
+                    <option value="1-3">1-3</option>
+                    <option value="4-6">4-6</option>
+                    <option value="7-9">7-9</option>
+                    <option value="10-12">10-12</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div>
-          <label>Giảng Viên:</label>
-          <input
-            type="text"
-            name="Instructor"
-            value={classData.Instructor}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Phòng Học:</label>
-          <input
-            type="text"
-            name="Classroom"
-            value={classData.Classroom}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Sỉ Số:</label>
-          <input
-            type="number"
-            name="Max_Students"
-            value={classData.Max_Students}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Môn Học:</label>
-          <select
-            name="courseId"
-            value={classData.courseId}
-            onChange={handleChange}
-            required
+        <div className="aa3">
+          <button
+            style={{
+              backgroundColor: "#0099FF",
+              color: "#FFFFFF",
+              fontSize: 20,
+              borderRadius: 10,
+            }}
+            type="submit"
           >
-            <option value="">-- Chọn Môn Học --</option>
-            {courses.map((course) => (
-              <option key={course._id} value={course._id}>
-                {course.Course_Name}
-              </option>
-            ))}
-          </select>
+            Thêm Lớp Học
+          </button>
         </div>
-        <div>
-          <label>Trạng Thái:</label>
-          <select
-            name="status"
-            value={classData.status}
-            onChange={handleChange}
-          >
-            <option value="chờ sinh viên đăng kí">Chờ Sinh Viên Đăng Kí</option>
-            <option value="đã mở lớp">Đã Mở Lớp</option>
-            <option value="đã khóa">Đã Khóa</option>
-          </select>
-        </div>
-        <div>
-          <label>Ngày Bắt Đầu:</label>
-          <input
-            type="date"
-            name="startDate"
-            value={classData.startDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Ngày Kết Thúc:</label>
-          <input
-            type="date"
-            name="endDate"
-            value={classData.endDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Ngày Học:</label>
-          <select
-            name="dayOfWeek"
-            value={classData.dayOfWeek}
-            onChange={handleChange} // Thay đổi handleChange thành handleScheduleChange
-            required
-          >
-            <option value="">-- Chọn Ngày Học --</option>
-            <option value="Monday">Thứ Hai</option>
-            <option value="Tuesday">Thứ Ba</option>
-            <option value="Wednesday">Thứ Tư</option>
-            <option value="Thursday">Thứ Năm</option>
-            <option value="Friday">Thứ Sáu</option>
-            <option value="Saturday">Thứ Bảy</option>
-            <option value="Sunday">Chủ Nhật</option>
-          </select>
-        </div>
-        <div>
-          <label>Thời Gian Học:</label>
-          <select
-            name="timeSlot"
-            value={classData.timeSlot}
-            onChange={handleChange} // Thay đổi handleChange thành handleScheduleChange
-          >
-            <option value="">-- Chọn Thời Gian Học --</option>
-            <option value="1-3">1-3</option>
-            <option value="4-6">4-6</option>
-            <option value="7-9">7-9</option>
-            <option value="10-12">10-12</option>
-          </select>
-        </div>
-        <button type="submit">Thêm Lớp Học</button>
       </form>
 
       <div>
-        <h2>Danh Sách Lớp Học</h2>
+        <h2
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            color: "#FFCC00",
+          }}
+        >
+          Danh Sách Lớp Học
+        </h2>
         <table>
           <thead>
             <tr>
@@ -300,12 +355,33 @@ const ClassForm = () => {
                   <td>{classItem.status}</td>
                   <td>{classItem.startDate}</td>
                   <td>{classItem.endDate}</td>
-                  <td>
-                    <button onClick={() => handleUpdate(classItem)}>
-                      Cập Nhật
+                  <td
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <button
+                      style={{
+                        fontSize: 15,
+                        backgroundColor: "#0099FF",
+                        borderRadius: 10,
+                      }}
+                      onClick={() => handleUpdate(classItem)}
+                    >
+                      Update
                     </button>
-                    <button onClick={() => handleDelete(classItem._id)}>
-                      Xóa
+                    <button
+                      style={{
+                        fontSize: 16,
+                        marginTop: 10,
+                        backgroundColor: "#0099FF",
+                        borderRadius: 10,
+                      }}
+                      onClick={() => handleDelete(classItem._id)}
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>
