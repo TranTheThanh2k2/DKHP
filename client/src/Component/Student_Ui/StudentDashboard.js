@@ -5,7 +5,7 @@ import "./style_student/Studentboard.css";
 
 import iuh1 from "../Student_Ui/style_student/iu1.png";
 import toan from "../Student_Ui/style_student/h2.jpg";
-import {useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const StudentDashboard = () => {
   const [studentId, setStudentId] = useState("");
@@ -171,33 +171,8 @@ const StudentDashboard = () => {
       console.error(error);
     }
   };
-  const fetchClassDetails = async (classId) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/api/${classId}`);
-      const classDetails = response.data;
-      setRegisteredClasses((prevClasses) =>
-        prevClasses.map((classItem) => {
-          if (classItem.classId === classId) {
-            return {
-              ...classItem,
-              Class_ID: classDetails.Class_ID,
-              Classroom: classDetails.Classroom,
-              Class_Name: classDetails.Class_Name,
-              Instructor: classDetails.Instructor,
-              status : classDetails.status
-            };
-          }
-          return classItem;
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-    registeredClasses.forEach((classItem) => {
-      fetchClassDetails(classItem.classId);
-    });
+    registeredClasses.forEach((classItem) => {});
   }, [registeredClasses]);
   useEffect(() => {
     if (studentId && semesterId) {
@@ -233,7 +208,13 @@ const StudentDashboard = () => {
           />
         </div>
         <div className="sv3">
-        <p onClick={() => navigate("/schedule")} style={{cursor: "pointer", textDecoration: "underline"}}>Xem Lịch Học</p> {/* Thêm liên kết điều hướng */}
+          <p
+            onClick={() => navigate("/schedule")}
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+          >
+            Xem Lịch Học
+          </p>{" "}
+          {/* Thêm liên kết điều hướng */}
           <p>ĐĂNG KÝ HỌC PHẦN</p>
           <p>CHƯƠNG TRÌNH KHUNG</p>
         </div>
@@ -340,18 +321,20 @@ const StudentDashboard = () => {
               <th>Tên lớp học </th>
               <th>Giảng viên</th>
               <th>Phòng Học</th>
+              <th>Thời Gian Bắt Đầu</th>
+              <th>Thời Gian Kết Thúc</th>
               {/* Thêm các cột khác nếu cần */}
             </tr>
           </thead>
           <tbody>
-            {registeredClasses.map((classItem) => (
-              <tr key={classItem._id}>
-                <td>{classItem.Class_ID}</td>
-                <td>{classItem.Class_Name}</td>
-                <td>{classItem.Instructor}</td>
-                <td>{classItem.Classroom}</td>
-                
-                {/* Thêm các ô dữ liệu khác nếu cần */}
+            {registeredClasses.map((registration, index) => (
+              <tr key={index}>
+                <td>{registration.classId.Class_ID}</td>
+                <td>{registration.classId.Class_Name}</td>
+                <td>{registration.classId.Instructor}</td>
+                <td>{registration.classId.Classroom}</td>
+                <td>{registration.classId.startDate}</td>
+                <td>{registration.classId.endDate}</td>
               </tr>
             ))}
           </tbody>
