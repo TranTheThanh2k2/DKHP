@@ -5,11 +5,9 @@ exports.getClassSchedulesBySemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
 
-    const registeredClasses = await ClassRegistration.find({ semesterId }).populate({
-      path: 'classId',
-
-    });
-    console.log(registeredClasses); // Kiểm tra xem thông tin lịch học đã được populate chưa
+    // Tìm tất cả các lớp đăng ký trong học kỳ và populate thông tin lớp học
+    const registeredClasses = await ClassRegistration.find({ semesterId }).populate('classId');
+    console.log('Registered Classes:', registeredClasses); // Kiểm tra dữ liệu đã populate
 
     const schedulesByDay = {
       Monday: [],
@@ -22,11 +20,18 @@ exports.getClassSchedulesBySemester = async (req, res) => {
     };
 
     registeredClasses.forEach((registration) => {
+      console.log('Registration:', registration);
       if (registration.classId && registration.classId.schedule) {
         const { schedule } = registration.classId;
-        console.log(schedule); // In ra giá trị của schedule để kiểm tra
+        console.log('Schedule:', schedule); // In ra giá trị của schedule để kiểm tra
 
-        // Tiếp tục xử lý các thông tin khác và push vào schedulesByDay
+        // Đẩy thông tin lịch học vào mảng tương ứng trong schedulesByDay
+        schedulesByDay[schedule.dayOfWeek].push({
+          timeSlot: schedule.timeSlot,
+          className: registration.classId.Class_Name,
+          instructor: registration.classId.Instructor,
+          classroom: registration.classId.Classroom,
+        });
       }
     });
 

@@ -8,6 +8,7 @@ const ClassRegistrationSchema = new Schema({
   },
   classId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Class',
     required: true
   },
   courseId: {

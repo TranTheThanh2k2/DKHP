@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSnackbar } from "notistack";
-import { useNavigate } from "react-router";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import "./style_student/ScheduleView.css";
 
 const Schedule = () => {
   const [studentId, setStudentId] = useState("");
@@ -13,11 +10,7 @@ const Schedule = () => {
   const [departmentCode, setDepartmentCode] = useState("");
   const [hiddenStudentId, setHiddenStudentId] = useState("");
   const [semesters, setSemesters] = useState([]);
-  const [registeredClasses, setRegisteredClasses] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(null);
   const [classSchedule, setClassSchedule] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const studentIdFromStorage = localStorage.getItem("studentID");
@@ -45,138 +38,71 @@ const Schedule = () => {
 
   const fetchSemesters = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/semesters`);
+      const response = await axios.get(`http://localhost:3000/semesters/`);
       setSemesters(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchClassDetails = async (classId) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/api/${classId}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+  const handleSemesterChange = (e) => {
+    const selectedSemesterId = e.target.value;
+    console.log("Selected semesterId:", selectedSemesterId);
+    setSemesterId(selectedSemesterId);
+    fetchClassScheduleBySemester(selectedSemesterId);
   };
 
-  const fetchRegisteredClassesBySemester = async () => {
+  const fetchClassScheduleBySemester = async (selectedSemesterId) => {
     try {
+      console.log("Fetching class schedule for semesterId:", selectedSemesterId);
       const response = await axios.get(
-        `http://localhost:3000/api/class/registered-classes/${studentId}/${semesterId}`
+        `http://localhost:3000/api/class/schedules/${selectedSemesterId}`
       );
-      const registeredClassesWithDetails = await Promise.all(
-        response.data.registeredClasses.map(async (classItem) => {
-          const classDetails = await fetchClassDetails(classItem.classId);
-          return { ...classItem, ...classDetails };
-        })
-      );
-      setRegisteredClasses(registeredClassesWithDetails);
+      setClassSchedule(response.data.schedulesByDay);
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    if (semesterId && studentId) {
-      fetchRegisteredClassesBySemester();
-    }
-  }, [semesterId, studentId]);
+  const renderSemesterDropdown = () => (
+    <select value={semesterId} onChange={handleSemesterChange}>
+      <option value="">-- Chọn học kỳ --</option>
+      {semesters.map((semester) => (
+        <option key={semester._id} value={semester._id}>
+          {semester.Semester_Name}
+        </option>
+      ))}
+    </select>
+  );
 
-  const handleClassSelection = async (classId) => {
-    setSelectedClass(classId);
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/schedule/${classId}`
-      );
-      setClassSchedule(response.data.schedule);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDateChange = async (date) => {
-    setSelectedClass(null); // Reset selectedClass when changing date
-    try {
-      const response = await axios.get(`http://localhost:3000/api/schedule`, {
-        params: { date },
-      });
-      setClassSchedule(response.data);
-    } catch (error) {
-      console.error(error);
+  const getClassPeriod = (timeSlot) => {
+    const startTime = parseInt(timeSlot.split("-")[0]);
+    if (startTime >= 1 && startTime <= 3) {
+      return "Sáng";
+    } else if (startTime >= 4 && startTime <= 6) {
+      return "Chiều";
+    } else if (startTime >= 7 && startTime <= 9) {
+      return "Chiều";
+    } else {
+      return "Tối";
     }
   };
 
   return (
-    <div>
-      <div>
-        <h3>Xin Chào !</h3>
-        <p>{fullName}</p>
-        <p>Giới Tính : {gender}</p>
-        <p>Khoa : {departmentCode} </p>
+    <div className="schedule-container">
+      <h3>Xin Chào ! {fullName}</h3>
+      <p>Khoa : {departmentCode} </p>
+      <div className="schedule-dropdown">
+        <label>Chọn Học Kỳ:</label>
+        {renderSemesterDropdown()}
       </div>
-      <div>
-        <h2>Lịch Học</h2>
-      </div>
-      <div>
-        <label style={{ fontSize: 20, fontWeight: "bold" }}>
-          Chọn Học Kỳ:
-          <select
-            style={{ marginLeft: 20, fontSize: 20 }}
-            value={semesterId}
-            onChange={(e) => {
-              setSemesterId(e.target.value);
-            }}
-          >
-            <option value="">-- Chọn học kỳ --</option>
-            {semesters.map((semester) => (
-              <option key={semester._id} value={semester._id}>
-                {semester.Semester_Name}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      {semesterId ? (
-        <div className="tableListCourses">
-          <h2 className="heading">Danh sách lớp học đã đăng ký</h2>
-          <table>
+      {classSchedule && (
+        <div>
+          <h2>Lịch Học</h2>
+          <table className="schedule-table">
             <thead>
               <tr>
-                <th>Mã LHP</th>
-                <th>Tên lớp học</th>
-                <th>Giảng viên</th>
-                <th>Phòng Học</th>
-              </tr>
-            </thead>
-            <tbody>
-              {registeredClasses.map((classItem) => (
-                <tr
-                  key={classItem._id}
-                  onClick={() => handleClassSelection(classItem.classId)}
-                >
-                  <td>{classItem.Class_ID}</td>
-                  <td>{classItem.Class_Name}</td>
-                  <td>{classItem.Instructor}</td>
-                  <td>{classItem.Classroom}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p>Vui lòng chọn học kỳ</p>
-      )}
-      <div className="schedule-view">
-        <div className="schedule-details">
-          <h2>Lịch học</h2>
-          <Calendar onChange={handleDateChange} value={new Date()} />
-          <table>
-            <thead>
-              <tr>
-                <th>Ca học</th>
+                <th>Ca Học</th>
                 <th>Thứ 2</th>
                 <th>Thứ 3</th>
                 <th>Thứ 4</th>
@@ -187,53 +113,74 @@ const Schedule = () => {
               </tr>
             </thead>
             <tbody>
-              {/* Render the schedule here */}
-              {classSchedule && (
-                <tr>
-                  <td>{classSchedule.timeSlot}</td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Monday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Tuesday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Wednesday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Thursday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Friday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Saturday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                  <td>
-                    {classSchedule.dayOfWeek === "Sunday"
-                      ? classSchedule.timeSlot
-                      : ""}
-                  </td>
-                </tr>
-              )}
+              <tr>
+                <td>Sáng</td>
+                {Object.keys(classSchedule).map((day) => {
+                  const timeSlot = classSchedule[day].find(
+                    (item) => item.timeSlot === "1-3" || item.timeSlot === "4-6"
+                  );
+                  return (
+                    <td key={`${day}-morning`}>
+                      {timeSlot ? (
+                        <div>
+                          <p className="lecture">{timeSlot.className}</p>
+                          <p>Giảng Viên: {timeSlot.instructor}</p>
+                          <p>Phòng Học: {timeSlot.classroom}</p>
+                        </div>
+                      ) : (
+                        <p></p>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+              <tr>
+                <td>Chiều</td>
+                {Object.keys(classSchedule).map((day) => {
+                  const timeSlot = classSchedule[day].find(
+                    (item) => item.timeSlot === "7-9" || item.timeSlot === "10-12"
+                  );
+                  return (
+                    <td key={`${day}-afternoon`}>
+                      {timeSlot ? (
+                        <div>
+                          <p className="lecture">{timeSlot.className}</p>
+                          <p>Giảng Viên: {timeSlot.instructor}</p>
+                          <p>Phòng Học: {timeSlot.classroom}</p>
+                        </div>
+                      ) : (
+                        <p></p>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+              <tr>
+                <td>Tối</td>
+                {Object.keys(classSchedule).map((day) => {
+                  const timeSlot = classSchedule[day].find(
+                    (item) => item.timeSlot === "13-15"
+                  );
+                  return (
+                    <td key={`${day}-evening`}>
+                      {timeSlot ? (
+                        <div>
+                          <p className="lecture">{timeSlot.className}</p>
+                          <p>Giảng Viên: {timeSlot.instructor}</p>
+                          <p>Phòng Học: {timeSlot.classroom}</p>
+                        </div>
+                      ) : (
+                        <p></p>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      )}
     </div>
   );
 };
-
 export default Schedule;
