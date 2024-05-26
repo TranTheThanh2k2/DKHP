@@ -118,9 +118,10 @@ const StudentDashboard = () => {
       setTimeout(() => {
         enqueueSnackbar(response.data.message, { variant: "success" });
       }, 1000);
-      fetchRegisteredCourses();
+      await fetchRegisteredCourses(); 
+      await fetchRegisteredClassesBySemester(); 
       fetchCoursesBySemester(semesterId);
-      await fetchCourseClasses(selectedCourses[0]); // Update the list of classes for the selected course
+      await fetchCourseClasses(selectedCourses[0]);
       setSelectedCourses([]);
       setSelectedClasses([]);
     } catch (error) {
@@ -241,8 +242,8 @@ const StudentDashboard = () => {
         <h2>ĐĂNG KÝ HỌC PHẦN</h2>
       </div>
       <div className="sv5">
-        <label style={{ fontSize: 20, fontWeight: "bold" }}>
-          Đợt Đăng Kí
+        <label style={{ fontSize: 30,color:'violet', fontWeight: "bold" }}>
+          <h2>Đợt Đăng Kí</h2>
           <select
             style={{ marginLeft: 20, fontSize: 20 }}
             value={semesterId}
@@ -339,8 +340,6 @@ const StudentDashboard = () => {
               <th>Tên lớp học </th>
               <th>Giảng viên</th>
               <th>Phòng Học</th>
-              <th>Thời Gian Bắt Đầu</th>
-              <th>Thời Gian Kết Thúc</th>
               <th>Hủy Đăng Ký</th>
               {/* Thêm các cột khác nếu cần */}
             </tr>
@@ -352,8 +351,6 @@ const StudentDashboard = () => {
                 <td>{registration.classId.Class_Name}</td>
                 <td>{registration.classId.Instructor}</td>
                 <td>{registration.classId.Classroom}</td>
-                <td>{registration.classId.startDate}</td>
-                <td>{registration.classId.endDate}</td>
                 <td>
                   <button onClick={() => handleCancelRegistration(registration._id)}>
                     Xóa
