@@ -70,7 +70,7 @@
 /* CSS for the submit button */
 .submit-button {
   padding: 10px 20px;
-  background-color: #395ac5;
+  /* background-color: #395ac5; */
   color: white;
   border: none;
   border-radius: 5px;
@@ -124,15 +124,12 @@
 .delete-button {
   padding: 5px 10px;
   border: none;
-  background-color: #4caf50;
-  color: white;
+  /* background-color: #4caf50;
+  color: white; */
   cursor: pointer;
 }
 
-.update-button:hover,
-.delete-button:hover {
-  background-color: #45a049;
-}
+
 
 
 

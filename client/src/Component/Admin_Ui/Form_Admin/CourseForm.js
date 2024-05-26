@@ -3,7 +3,6 @@ import axios from "axios";
 import Modal from "react-modal";
 import "./style_admin/CourseForm.css";
 
-
 const CourseForm = () => {
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState({
@@ -226,6 +225,8 @@ const CourseForm = () => {
             <tr>
               <th>Tên Môn Học</th>
               <th>Số tín chỉ</th>
+              <td style={{backgroundColor:"#3399ff",color:"#FFFFFF"}}>Kỳ học</td>
+              <td style={{backgroundColor:"#3399ff",color:"#FFFFFF"}}>Phòng ban</td>
               <th>Hành động</th>
             </tr>
           </thead>
@@ -235,6 +236,22 @@ const CourseForm = () => {
                 <tr>
                   <td>{course.Course_Name}</td>
                   <td>{course.Credit_Hours}</td>
+                  <td>
+                    {
+                      semesters.find(
+                        (semester) => semester._id === course.Semester_ID
+                      )?.Semester_Name
+                    }
+                  </td>
+                  <td>
+                    {
+                      departments.find(
+                        (department) =>
+                          department._id === course.Department_Code
+                      )?.Department_Name
+                    } 
+                  </td>
+
                   <td>
                     <button
                       className="update-button"
@@ -289,7 +306,7 @@ const CourseForm = () => {
                               }
                               placeholder="Số tín chỉ"
                             />
-                        
+
                             {/* Dropdown để chọn kỳ học */}
                             <select
                               value={selectedCourse?.Semester_ID}
