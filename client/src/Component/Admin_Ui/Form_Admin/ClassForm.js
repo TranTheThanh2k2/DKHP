@@ -141,7 +141,6 @@ const ClassForm = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            color: "#FFCC00",
           }}
         >
           Thêm Lớp Học
@@ -303,17 +302,14 @@ const ClassForm = () => {
           </table>
         </div>
         <div className="aa3">
+          
           <button
-            style={{
-              backgroundColor: "#0099FF",
-              color: "#FFFFFF",
-              fontSize: 20,
-              borderRadius: 10,
-            }}
-            type="submit"
+            className="submit-button"  
+           style={{alignContent: "center", marginLeft: "40%"}}
           >
             Thêm Lớp Học
           </button>
+
         </div>
       </form>
 
@@ -322,73 +318,78 @@ const ClassForm = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            color: "#FFCC00",
+            
           }}
         >
           Danh Sách Lớp Học
         </h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Tên Lớp Học</th>
-              <th>Mã Lớp</th>
-              <th>Giảng Viên</th>
-              <th>Phòng Học</th>
-              <th>Sỉ Số</th>
-              <th>Môn Học</th>
-              <th>Trạng Thái</th>
-              <th>Ngày Bắt Đầu</th>
-              <th>Ngày Kết Thúc</th>
-              <th>Thao Tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {classList.map((classItem) =>
-              classItem ? (
-                <tr key={classItem._id}>
-                  <td>{classItem.Class_Name}</td>
-                  <td>{classItem.Class_ID}</td>
-                  <td>{classItem.Instructor}</td>
-                  <td>{classItem.Classroom}</td>
-                  <td>{classItem.Max_Students}</td>
-                  <td>{classItem.courseId}</td>
-                  <td>{classItem.status}</td>
-                  <td>{classItem.startDate}</td>
-                  <td>{classItem.endDate}</td>
-                  <td
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <button
+
+        <div className="aa4">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên Lớp Học</th>
+                <th>Mã Lớp</th>
+                <th>Giảng Viên</th>
+                <th>Phòng Học</th>
+                <th>Sỉ Số</th>
+                <th>Môn Học</th>
+                <th>Trạng Thái</th>
+                <th>Ngày Bắt Đầu</th>
+                <th>Ngày Kết Thúc</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              {classList.map((classItem) =>
+                classItem ? (
+                  <tr key={classItem._id}>
+                    <td>{classItem.Class_Name}</td>
+                    <td>{classItem.Class_ID}</td>
+                    <td>{classItem.Instructor}</td>
+                    <td>{classItem.Classroom}</td>
+                    <td>{classItem.Max_Students}</td>
+                    <td>{classItem.courseId}</td>
+                    <td>{classItem.status}</td>
+                    <td>{classItem.startDate}</td>
+                    <td>{classItem.endDate}</td>
+                    <td
                       style={{
-                        fontSize: 15,
-                        backgroundColor: "#0099FF",
-                        borderRadius: 10,
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column",
                       }}
-                      onClick={() => handleUpdate(classItem)}
                     >
-                      Update
-                    </button>
-                    <button
-                      style={{
-                        fontSize: 16,
-                        marginTop: 10,
-                        backgroundColor: "#0099FF",
-                        borderRadius: 10,
-                      }}
-                      onClick={() => handleDelete(classItem._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ) : null
-            )}
-          </tbody>
-        </table>
+                      <button
+                        className="update-button"
+                        style={{
+                          fontSize: 15,
+                          backgroundColor: "#0099FF",
+                          borderRadius: 10,
+                        }}
+                        onClick={() => handleUpdate(classItem)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="delete-button"
+                        style={{
+                          fontSize: 16,
+                          marginTop: 10,
+                          // backgroundColor: "#0099FF",
+                          borderRadius: 10,
+                        }}
+                        onClick={() => handleDelete(classItem._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ) : null
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

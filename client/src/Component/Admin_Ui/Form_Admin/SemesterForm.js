@@ -12,7 +12,7 @@ const SemesterForm = () => {
     Start_Date: "",
     End_Date: "",
   });
-  const [ setIsModalOpen] = useState(false);
+  const [ ,setIsModalOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState(null);
   const [editingSemesterId, setEditingSemesterId] = useState(null);
 
@@ -267,11 +267,11 @@ const SemesterForm = () => {
                             />
                             <button className="submit-update" type="submit">Cập nhật</button>
                             <button
-                              onClick={() => setIsModalOpen(false)}
+                              onClick={() => setIsModalOpen()}
                               className="submit-update"
                             >
                               Đóng
-                            </button>
+                            </button> 
                           </form>
                         </div>
                       </ul>
