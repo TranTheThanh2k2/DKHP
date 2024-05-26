@@ -4,7 +4,7 @@ const classRegistrationController = require('../controllers/classRegistrationCon
 
 // Đăng ký lớp học
 router.post('/register', classRegistrationController.registerClass);
-router.get("/schedules/:semesterId",classRegistrationController.getClassSchedulesBySemester);
+// router.get("/schedules/:semesterId",classRegistrationController.getClassSchedulesBySemester);
 // Hủy đăng ký lớp học
 router.delete('/cancel/:registrationId', classRegistrationController.cancelRegistrationById);
 router.get('/registered-classes/:studentId/:semesterId', classRegistrationController.getRegisteredClassesBySemester);

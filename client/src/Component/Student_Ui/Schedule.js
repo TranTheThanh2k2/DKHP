@@ -51,19 +51,50 @@ const Schedule = () => {
     setSemesterId(selectedSemesterId);
     fetchClassScheduleBySemester(selectedSemesterId);
   };
-
   const fetchClassScheduleBySemester = async (selectedSemesterId) => {
     try {
       console.log("Fetching class schedule for semesterId:", selectedSemesterId);
+      
+      // Gọi API để lấy danh sách các lớp học đã đăng ký trong học kỳ
       const response = await axios.get(
-        `http://localhost:3000/api/class/schedules/${selectedSemesterId}`
+        `http://localhost:3000/api/class/registered-classes/${studentId}/${selectedSemesterId}`
       );
-      setClassSchedule(response.data.schedulesByDay);
+  
+      // Lấy danh sách các lớp học đã đăng ký từ phản hồi
+      const registeredClasses = response.data.registeredClasses;
+  
+      // Tạo đối tượng để lưu trữ lịch học theo ngày và khung giờ
+      const updatedClassSchedule = {
+        Monday: [],
+        Tuesday: [],
+        Wednesday: [],
+        Thursday: [],
+        Friday: [],
+        Saturday: [],
+        Sunday: []
+      };
+  
+      // Duyệt qua từng lớp học đã đăng ký để thêm thông tin vào lịch học
+      registeredClasses.forEach((registration) => {
+        if (registration.classId && registration.classId.schedule) {
+          const { schedule } = registration.classId;
+          updatedClassSchedule[schedule.dayOfWeek].push({
+            timeSlot: schedule.timeSlot,
+            className: registration.classId.Class_Name,
+            instructor: registration.classId.Instructor,
+            classroom: registration.classId.Classroom
+          });
+        }
+      });
+  
+      // Cập nhật state với lịch học đã được xây dựng từ danh sách lớp học đã đăng ký
+      setClassSchedule(updatedClassSchedule);
     } catch (error) {
       console.error(error);
     }
   };
-
+  
+  
   const renderSemesterDropdown = () => (
     <select value={semesterId} onChange={handleSemesterChange}>
       <option value="">-- Chọn học kỳ --</option>
