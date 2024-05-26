@@ -210,12 +210,16 @@ const StudentDashboard = () => {
         <div className="sv3">
           <p
             onClick={() => navigate("/schedule")}
-            style={{ cursor: "pointer", textDecoration: "underline" }}
+            style={{ cursor: "pointer",fontSize:30 }}
           >
             Xem Lịch Học
-          </p>{" "}
-          {/* Thêm liên kết điều hướng */}
-          <p>ĐĂNG KÝ HỌC PHẦN</p>
+          </p>
+          <p
+            onClick={() => navigate("/info-student")}
+            style={{ cursor: "pointer",fontSize:30 }}
+          >
+            Thông Tin Sinh Viên
+          </p>
           <p>CHƯƠNG TRÌNH KHUNG</p>
         </div>
       </div>
