@@ -141,6 +141,7 @@
 }
 .edit-department-form .submit-update:hover,
 .edit-department-form .cancel-update:hover {
+  padding: 10px 20px;
   background-color: #567a0d;
 }
 
@@ -151,3 +152,4 @@
 .update-department-form {
   max-width: 800px; /* Điều chỉnh giá trị maxWidth theo ý muốn */
 }
+
