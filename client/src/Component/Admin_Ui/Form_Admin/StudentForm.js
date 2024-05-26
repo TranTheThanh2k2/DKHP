@@ -296,65 +296,64 @@ const StudentForm = () => {
 
         {notification && <div className="notification">{notification}</div>}
       </form>
-      <table>
-        <thead>
-          <tr>
-            <th>Mã sinh viên</th>
-            <th>Tên Sinh Viên</th>
-            <th>Email</th>
-            <th>Số Điện Thoại</th>
-            <th>Địa chỉ</th>
-            <th>Ngày sinh</th>
-            <th>Giới tính</th>
-            <th>Khoa</th>
-            <th>Role</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map((student) => {
-            const user = users.find((user) => user.email === student.Email);
-            const role = user?.isAdmin ? "Admin" : "Student";
-            return (
-              <tr key={student._id}>
-                <td>{student.Student_ID}</td>
-                <td>{student.Full_Name}</td>
-                <td>{student.Email}</td>
-                <td>{student.Phone_Number}</td>
-                <td>{student.Address}</td>
-                <td>{student.Date_of_Birth}</td>
-                <td>{student.Gender}</td>
-                <td>{student.Department_Code}</td>
-                <td>{role}</td>
-                <td
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <button
-                    style={{ fontSize: 20, backgroundColor: "#0099FF" }}
-                    onClick={() => handleEditStudent(student)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    style={{
-                      fontSize: 15,
-                      marginTop: 10,
-                      backgroundColor: "#0099FF",
-                    }}
-                    onClick={() => handleDeleteStudent(student._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="cc4">
+        <h2 style={{ display: "flex", justifyContent: "center" }}>
+          Danh sách sinh viên
+        </h2>
+      </div>
+      <div className="cc5">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã sinh viên</th>
+              <th>Tên Sinh Viên</th>
+              <th>Email</th>
+              <th>Số Điện Thoại</th>
+              <th>Địa chỉ</th>
+              <th>Ngày sinh</th>
+              <th>Giới tính</th>
+              <th>Khoa</th>
+              <th>Role</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map((student) => {
+              const user = users.find((user) => user.email === student.Email);
+              const role = user?.isAdmin ? "Admin" : "Student";
+              return (
+                <tr key={student._id}>
+                  <td>{student.Student_ID}</td>
+                  <td>{student.Full_Name}</td>
+                  <td>{student.Email}</td>
+                  <td>{student.Phone_Number}</td>
+                  <td>{student.Address}</td>
+                  <td>{student.Date_of_Birth}</td>
+                  <td>{student.Gender}</td>
+                  <td>{student.Department_Code}</td>
+                  <td>{role}</td>
+                  <td>
+                    <div className="acction-1">
+                      <button
+                        className="update-button-123"
+                        onClick={() => handleEditStudent(student)}
+                      >
+                        Cập nhật
+                      </button>
+                      <button
+                        className="delete-button-123"
+                        onClick={() => handleDeleteStudent(student._id)}
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
         {selectedStudent && (
