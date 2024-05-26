@@ -22,7 +22,7 @@ const StudentForm = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  //   const [editingStudentId, setEditingStudentId] = useState(null);
+  const [editingStudentId, setEditingStudentId] = useState(null);
 
   useEffect(() => {
     fetchStudents();
@@ -51,8 +51,8 @@ const StudentForm = () => {
     }
   };
 
-  const createUserAndStudent = async (event) => {
-    event.preventDefault();
+  const createUserAndStudent = async (e) => {
+    e.preventDefault();
     try {
       const userData = {
         email: newStudent.email,
@@ -80,20 +80,18 @@ const StudentForm = () => {
       console.error(error); // Log error message
     }
   };
-
-  const handleEditStudent = (student) => {
-    setSelectedStudent(student);
-    setIsModalOpen(true);
-  };
-
-  const handleUpdateStudent = async () => {
+  const handleUpdateStudent = async (e) => {
+    e.preventDefault();
     try {
       await axios.put(
         `http://localhost:3000/api/students/${selectedStudent._id}`,
         selectedStudent
       );
-      setIsModalOpen(false);
+
       fetchStudents();
+      setIsModalOpen(false);
+      setSelectedStudent(null);
+      setEditingStudentId(null);
     } catch (error) {
       console.error(error);
     }
@@ -106,6 +104,11 @@ const StudentForm = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+  const openModal = (student) => {
+    setIsModalOpen(true);
+    setSelectedStudent(student);
+    setEditingStudentId(student._id);
   };
 
   return (
@@ -322,159 +325,165 @@ const StudentForm = () => {
               const user = users.find((user) => user.email === student.Email);
               const role = user?.isAdmin ? "Admin" : "Student";
               return (
-                <tr key={student._id}>
-                  <td>{student.Student_ID}</td>
-                  <td>{student.Full_Name}</td>
-                  <td>{student.Email}</td>
-                  <td>{student.Phone_Number}</td>
-                  <td>{student.Address}</td>
-                  <td>{student.Date_of_Birth}</td>
-                  <td>{student.Gender}</td>
-                  <td>{student.Department_Code}</td>
-                  <td>{role}</td>
-                  <td>
-                    <div className="acction-1">
-                      <button
-                        className="update-button-123"
-                        onClick={() => handleEditStudent(student)}
-                      >
-                        Cập nhật
-                      </button>
-                      <button
-                        className="delete-button-123"
-                        onClick={() => handleDeleteStudent(student._id)}
-                      >
-                        Xóa
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                <React.Fragment key={student._id}>
+                  <tr>
+                    <td>{student.Student_ID}</td>
+                    <td>{student.Full_Name}</td>
+                    <td>{student.Email}</td>
+                    <td>{student.Phone_Number}</td>
+                    <td>{student.Address}</td>
+                    <td>{student.Date_of_Birth}</td>
+                    <td>{student.Gender}</td>
+                    <td>{student.Department_Code}</td>
+                    <td>{role}</td>
+                    <td>
+                      <div className="acction-1">
+                        <button
+                          className="update-button-123"
+                          onClick={() => openModal(student)}
+                        >
+                          Cập nhật
+                        </button>
+                        <button
+                          className="delete-button-123"
+                          onClick={() => handleDeleteStudent(student._id)}
+                        >
+                          Xóa
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  {editingStudentId === student._id  && (
+                    <tr key={`${selectedStudent?._id}-edit`}>
+                      <td colSpan="5">
+                        <div className="edit-semester-form-123">
+                          <h2>Edit Student</h2>
+                          <form onSubmit={handleUpdateStudent}>
+                            <label>
+                              Student ID:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Student_ID}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Student_ID: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+
+                            <label>
+                              Full Name:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Full_Name}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Full_Name: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Email:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Email}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Email: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Phone Number:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Phone_Number}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Phone_Number: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Address:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Address}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Address: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Date of Birth:
+                              <input
+                                type="date"
+                                value={selectedStudent?.Date_of_Birth}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Date_of_Birth: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Gender:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Gender}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Gender: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+                            <label>
+                              Department Code:
+                              <input
+                                type="text"
+                                value={selectedStudent?.Department_Code}
+                                onChange={(e) =>
+                                  setSelectedStudent({
+                                    ...selectedStudent,
+                                    Department_Code: e.target.value,
+                                  })
+                                }
+                              />
+                            </label>
+
+                            {/* Your form inputs */}
+                            <button type="submit">Update</button>
+                            <button
+                              onClick={() => setIsModalOpen(false)} // Thêm tham số false để đóng modal
+                              className="submit-update"
+                            >
+                              Đóng
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               );
             })}
           </tbody>
         </table>
       </div>
-
-      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        {selectedStudent && (
-          <div>
-            <h2>Edit Student</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleUpdateStudent();
-              }}
-            >
-              <label>
-                Student ID:
-                <input
-                  type="text"
-                  value={selectedStudent.Student_ID}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Student_ID: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Full Name:
-                <input
-                  type="text"
-                  value={selectedStudent.Full_Name}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Full_Name: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Email:
-                <input
-                  type="text"
-                  value={selectedStudent.Email}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Email: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Phone Number:
-                <input
-                  type="text"
-                  value={selectedStudent.Phone_Number}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Phone_Number: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Address:
-                <input
-                  type="text"
-                  value={selectedStudent.Address}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Address: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Date of Birth:
-                <input
-                  type="date"
-                  value={selectedStudent.Date_of_Birth}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Date_of_Birth: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Gender:
-                <input
-                  type="text"
-                  value={selectedStudent.Gender}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Gender: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <label>
-                Department Code:
-                <input
-                  type="text"
-                  value={selectedStudent.Department_Code}
-                  onChange={(e) =>
-                    setSelectedStudent({
-                      ...selectedStudent,
-                      Department_Code: e.target.value,
-                    })
-                  }
-                />
-              </label>
-              <button type="submit">Update</button>
-              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
-            </form>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };

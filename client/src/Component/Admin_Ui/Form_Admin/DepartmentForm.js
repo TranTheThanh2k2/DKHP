@@ -63,6 +63,19 @@ const DepartmentForm = () => {
       console.error(error);
     }
   };
+  const handleUpdateDepartment = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(
+        `http://localhost:3000/departments/${selectedDepartment._id}`,
+        selectedDepartment
+      );
+      setEditingDepartmentId(null);
+      fetchDepartments();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="department-form-wrapper">
@@ -146,7 +159,7 @@ const DepartmentForm = () => {
                           <div>
                             <form
                               className="update-department-form"
-                              // onSubmit={handleUpdateDepartment}
+                              onSubmit={handleUpdateDepartment}
                             >
                               <input
                                 type="text"
@@ -170,15 +183,18 @@ const DepartmentForm = () => {
                                 }
                                 placeholder="Tên phòng ban"
                               />
-                              <button className="submit-update" type="submit">
-                                Cập nhật
-                              </button>
-                              <button
-                                onClick={() => setEditingDepartmentId(null)}
-                                className="submit-update"
-                              >
-                                Hủy
-                              </button>
+                              <div className="button-group">
+                                <button className="submit-update" type="submit">
+                                  Cập nhật
+                                </button>
+                                
+                                <button
+                                  onClick={() => setEditingDepartmentId(null)}
+                                  className="submit-update"
+                                >
+                                  Hủy
+                                </button>
+                              </div>
                             </form>
                           </div>
                         </ul>
