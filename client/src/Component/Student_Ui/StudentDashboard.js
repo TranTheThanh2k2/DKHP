@@ -128,6 +128,20 @@ const StudentDashboard = () => {
       enqueueSnackbar("Đăng ký lớp học thất bại.", { variant: "error" });
     }
   };
+  const handleCancelRegistration = async (registrationId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/api/class/cancel/${registrationId}`
+      );
+      console.log(response.data);
+      enqueueSnackbar(response.data.message, { variant: "success" });
+      fetchRegisteredCourses();
+      fetchRegisteredClassesBySemester(); // Reload the list of registered classes
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar("Xóa đăng ký thất bại.", { variant: "error" });
+    }
+  };
   const handleCheckboxChange = async (courseId) => {
     // Kiểm tra nếu môn học đã được chọn
     if (selectedCourses.includes(courseId)) {
@@ -327,6 +341,7 @@ const StudentDashboard = () => {
               <th>Phòng Học</th>
               <th>Thời Gian Bắt Đầu</th>
               <th>Thời Gian Kết Thúc</th>
+              <th>Hủy Đăng Ký</th>
               {/* Thêm các cột khác nếu cần */}
             </tr>
           </thead>
@@ -339,6 +354,11 @@ const StudentDashboard = () => {
                 <td>{registration.classId.Classroom}</td>
                 <td>{registration.classId.startDate}</td>
                 <td>{registration.classId.endDate}</td>
+                <td>
+                  <button onClick={() => handleCancelRegistration(registration._id)}>
+                    Xóa
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
