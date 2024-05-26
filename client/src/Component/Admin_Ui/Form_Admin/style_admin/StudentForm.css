@@ -13,6 +13,7 @@
 .cc4,
 .cc5 {
   width: 100%;
+
   max-width: 1200px;
   margin-bottom: 20px;
 }
@@ -34,7 +35,6 @@ td {
   padding: 8px;
   text-align: left;
 }
-
 
 .student-input,
 .student-eamil-1 {
@@ -118,7 +118,7 @@ td {
 
   .submit-button,
   .update-button-123,
-  .delete-button-123{
+  .delete-button-123 {
     padding: 5px 10px;
   }
 }
