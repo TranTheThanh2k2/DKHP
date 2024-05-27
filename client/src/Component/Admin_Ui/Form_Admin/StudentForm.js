@@ -287,7 +287,7 @@ const StudentForm = () => {
                 </td>
               </tr>
             </tbody>
-          </table>{" "}
+          </table>
         </div>
         <div className="cc3">
           <td>
@@ -353,7 +353,7 @@ const StudentForm = () => {
                       </div>
                     </td>
                   </tr>
-                  {editingStudentId === student._id  && (
+                  {editingStudentId === student._id && (
                     <tr key={`${selectedStudent?._id}-edit`}>
                       <td colSpan="5">
                         <div className="edit-semester-form-123">

@@ -118,8 +118,8 @@ const StudentDashboard = () => {
       setTimeout(() => {
         enqueueSnackbar(response.data.message, { variant: "success" });
       }, 1000);
-      await fetchRegisteredCourses(); 
-      await fetchRegisteredClassesBySemester(); 
+      await fetchRegisteredCourses();
+      await fetchRegisteredClassesBySemester();
       fetchCoursesBySemester(semesterId);
       await fetchCourseClasses(selectedCourses[0]);
       setSelectedCourses([]);
@@ -225,25 +225,25 @@ const StudentDashboard = () => {
         <div className="sv3">
           <p
             onClick={() => navigate("/schedule")}
-            style={{ cursor: "pointer",fontSize:30 }}
+            style={{ cursor: "pointer", fontSize: 25 }}
           >
             Xem Lịch Học
           </p>
           <p
             onClick={() => navigate("/info-student")}
-            style={{ cursor: "pointer",fontSize:30 }}
+            style={{ cursor: "pointer", fontSize: 25 }}
           >
             Thông Tin Sinh Viên
           </p>
-          <p>CHƯƠNG TRÌNH KHUNG</p>
+          <p style={{ cursor: "pointer", fontSize: 25 }}>Chương trình khung</p>
         </div>
       </div>
       <div className="sv4">
-        <h2>ĐĂNG KÝ HỌC PHẦN</h2>
+        <h2 style={{color: "#00CCFF"}}>ĐĂNG KÝ HỌC PHẦN</h2>
       </div>
       <div className="sv5">
-        <label style={{ fontSize: 30,color:'violet', fontWeight: "bold" }}>
-          <h2>Đợt Đăng Kí</h2>
+        <h2 style={{color: "#00CCFF"}}>Đợt Đăng Kí</h2>
+        <label style={{ fontSize: 23, color: "violet", fontWeight: "bold" }}>
           <select
             style={{ marginLeft: 20, fontSize: 20 }}
             value={semesterId}
@@ -262,7 +262,7 @@ const StudentDashboard = () => {
         </label>
       </div>
       <div className="sv6">
-        <h2>Môn Học Phần Đang Chờ Đăng Ký</h2>
+        <h2 style={{color: "#00CCFF"}}>Môn Học Phần Đang Chờ Đăng Ký</h2>
       </div>
 
       <table className="table-student123">
@@ -341,7 +341,6 @@ const StudentDashboard = () => {
               <th>Giảng viên</th>
               <th>Phòng Học</th>
               <th>Hủy Đăng Ký</th>
-              {/* Thêm các cột khác nếu cần */}
             </tr>
           </thead>
           <tbody>
@@ -352,7 +351,9 @@ const StudentDashboard = () => {
                 <td>{registration.classId.Instructor}</td>
                 <td>{registration.classId.Classroom}</td>
                 <td>
-                  <button onClick={() => handleCancelRegistration(registration._id)}>
+                  <button
+                    onClick={() => handleCancelRegistration(registration._id)}
+                  >
                     Xóa
                   </button>
                 </td>
