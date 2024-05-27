@@ -125,8 +125,8 @@ const StudentDashboard = () => {
       setSelectedCourses([]);
       setSelectedClasses([]);
     } catch (error) {
-      console.error(error);
-      enqueueSnackbar("Đăng ký lớp học thất bại.", { variant: "error" });
+      const errorMessage = error.response?.data?.message || 'Đăng ký lớp học thất bại.';
+      enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
   const handleCancelRegistration = async (registrationId) => {
@@ -339,7 +339,7 @@ const StudentDashboard = () => {
               <th>Mã LHP</th>
               <th>Tên lớp học </th>
               <th>Giảng viên</th>
-              <th>Phòng Học</th>
+              <th>Phòng Học</th>  
               <th>Hủy Đăng Ký</th>
             </tr>
           </thead>
