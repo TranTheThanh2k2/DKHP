@@ -6,7 +6,7 @@ import "./style_student/Studentboard.css";
 import iuh1 from "../Student_Ui/style_student/iu1.png";
 import toan from "../Student_Ui/style_student/h2.jpg";
 import { useNavigate } from "react-router";
-
+import moment from "moment";
 const StudentDashboard = () => {
   const [studentId, setStudentId] = useState("");
   const [semesterId, setSemesterId] = useState("");
@@ -125,7 +125,8 @@ const StudentDashboard = () => {
       setSelectedCourses([]);
       setSelectedClasses([]);
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Đăng ký lớp học thất bại.';
+      const errorMessage =
+        error.response?.data?.message || "Đăng ký lớp học thất bại.";
       enqueueSnackbar(errorMessage, { variant: "error" });
     }
   };
@@ -137,21 +138,17 @@ const StudentDashboard = () => {
       console.log(response.data);
       enqueueSnackbar(response.data.message, { variant: "success" });
       fetchRegisteredCourses();
-      fetchRegisteredClassesBySemester(); // Reload the list of registered classes
+      fetchRegisteredClassesBySemester();
     } catch (error) {
       console.error(error);
       enqueueSnackbar("Xóa đăng ký thất bại.", { variant: "error" });
     }
   };
   const handleCheckboxChange = async (courseId) => {
-    // Kiểm tra nếu môn học đã được chọn
     if (selectedCourses.includes(courseId)) {
-      // Nếu đã được chọn, hủy bỏ chọn môn học
       setSelectedCourses([]);
-      // Đồng thời cũng làm sạch danh sách các lớp học tương ứng
       setSelectedCourseClasses([]);
     } else {
-      // Nếu chưa được chọn, thực hiện chọn môn học
       setSelectedCourses([courseId]);
       await fetchCourseClasses(courseId);
     }
@@ -239,10 +236,10 @@ const StudentDashboard = () => {
         </div>
       </div>
       <div className="sv4">
-        <h2 style={{color: "#00CCFF"}}>ĐĂNG KÝ HỌC PHẦN</h2>
+        <h2 style={{ color: "#00CCFF" }}>ĐĂNG KÝ HỌC PHẦN</h2>
       </div>
       <div className="sv5">
-        <h2 style={{color: "#00CCFF"}}>Đợt Đăng Kí</h2>
+        <h2 style={{ color: "#00CCFF" }}>Đợt Đăng Kí</h2>
         <label style={{ fontSize: 23, color: "violet", fontWeight: "bold" }}>
           <select
             style={{ marginLeft: 20, fontSize: 20 }}
@@ -262,7 +259,7 @@ const StudentDashboard = () => {
         </label>
       </div>
       <div className="sv6">
-        <h2 style={{color: "#00CCFF"}}>Môn Học Phần Đang Chờ Đăng Ký</h2>
+        <h2 style={{ color: "#00CCFF" }}>Môn Học Phần Đang Chờ Đăng Ký</h2>
       </div>
 
       <table className="table-student123">
@@ -339,7 +336,9 @@ const StudentDashboard = () => {
               <th>Mã LHP</th>
               <th>Tên lớp học </th>
               <th>Giảng viên</th>
-              <th>Phòng Học</th>  
+              <th>Phòng Học</th>
+              <th>Ngày Bắt Đầu</th>
+              <th>Ngày Kết Thúc</th>
               <th>Hủy Đăng Ký</th>
             </tr>
           </thead>
@@ -350,6 +349,12 @@ const StudentDashboard = () => {
                 <td>{registration.classId.Class_Name}</td>
                 <td>{registration.classId.Instructor}</td>
                 <td>{registration.classId.Classroom}</td>
+                <td>
+                  {moment(registration.classId.startDate).format("YYYY-MM-DD")}
+                </td>
+                <td>
+                  {moment(registration.classId.endDate).format("YYYY-MM-DD")}
+                </td>
                 <td>
                   <button
                     onClick={() => handleCancelRegistration(registration._id)}
