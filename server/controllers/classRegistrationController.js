@@ -23,27 +23,43 @@ exports.getRegisteredClassesBySemester = async (req, res) => {
     res.status(500).json({ success: false, message: 'Đã xảy ra lỗi khi lấy danh sách lớp học đã đăng ký' });
   }
 };
-
-
 exports.registerClass = async (req, res) => {
   try {
     const { studentId, classId, courseId, semesterId } = req.body;
-    const existingRegistration = await ClassRegistration.findOne({ studentId, courseId, semesterId });
-    if (existingRegistration) {
-      return res.status(400).json({ message: 'Sinh viên đã đăng ký lớp học thuộc môn học này trong học kỳ này' });
-    }
+
+    // Lấy thông tin lớp học mà sinh viên muốn đăng ký
     const classInfo = await Class.findById(classId);
     if (!classInfo) {
       return res.status(404).json({ message: 'Không tìm thấy lớp học' });
     }
 
+    // Kiểm tra trạng thái của lớp học
     if (classInfo.status !== 'đã mở lớp') {
       return res.status(400).json({ message: 'Lớp học không ở trạng thái đã mở lớp' });
     }
-    const registeredStudents = await ClassRegistration.countDocuments({ classId, semesterId });
-    if (registeredStudents >= classInfo.Max_Students) {
+
+    // Kiểm tra trùng lặp lịch học với các lớp học đã đăng ký của sinh viên
+    const existingRegistrations = await ClassRegistration.find({ studentId, semesterId }).populate('classId');
+    const hasConflict = existingRegistrations.some(registration => {
+      const registeredClass = registration.classId;
+      return (
+        registeredClass._id.toString() !== classId && // Tránh so sánh lớp hiện tại với chính nó
+        registeredClass.schedule.dayOfWeek === classInfo.schedule.dayOfWeek &&
+        registeredClass.schedule.timeSlot === classInfo.schedule.timeSlot
+      );
+    });
+
+    if (hasConflict) {
+      return res.status(400).json({ message: 'Lịch học của lớp này trùng với một lớp khác đã đăng ký' });
+    }
+
+    // Kiểm tra số lượng sinh viên đăng ký
+    const registeredStudentsCount = await ClassRegistration.countDocuments({ classId, semesterId });
+    if (registeredStudentsCount >= classInfo.Max_Students) {
       return res.status(400).json({ message: 'Lớp học đã đầy, không thể đăng ký' });
     }
+
+    // Nếu không có xung đột, thêm đăng ký lớp học mới vào cơ sở dữ liệu
     const registration = new ClassRegistration({ studentId, classId, courseId, semesterId });
     const savedRegistration = await registration.save();
 
