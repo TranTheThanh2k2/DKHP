@@ -56,6 +56,11 @@ const addClass = async (req, res) => {
   try {
     const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule } = req.body;
 
+    // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày bắt đầu
+    if (startDate && endDate && endDate < startDate) {
+      return res.status(400).json({ message: 'Ngày kết thúc không được nhỏ hơn ngày bắt đầu' });
+    }
+
     const newClass = new Class({
       Class_ID,
       Class_Name,
@@ -75,7 +80,6 @@ const addClass = async (req, res) => {
     res.status(500).json({ message: 'Có lỗi xảy ra khi thêm lớp học.', error });
   }
 };
-
 const deleteClass = async (req, res) => {
   try {
     const { id } = req.params;
@@ -107,6 +111,11 @@ const updateClass = async (req, res) => {
     const { id } = req.params;
     const { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule } = req.body;
 
+    // Kiểm tra nếu ngày kết thúc nhỏ hơn ngày bắt đầu
+    if (startDate && endDate && endDate < startDate) {
+      return res.status(400).json({ message: 'Ngày kết thúc không được nhỏ hơn ngày bắt đầu' });
+    }
+
     const updatedClass = await Class.findByIdAndUpdate(
       id,
       { Class_ID, Class_Name, Instructor, Classroom, Max_Students, courseId, status, startDate, endDate, schedule },
@@ -133,6 +142,7 @@ const updateClass = async (req, res) => {
     });
   }
 };
+
 const getAllClasses = async (req, res) => {
   try {
     
