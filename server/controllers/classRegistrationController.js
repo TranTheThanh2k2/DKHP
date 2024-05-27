@@ -1,6 +1,9 @@
 const { default: mongoose } = require('mongoose');
 const ClassRegistration = require('../models/ClassRegistration');
 const Class = require('../models/class');
+const sendEmail = require('../service/sendMail');
+const Student = require('../models/student');
+const Course = require('../models/course');
 
 exports.getRegisteredClassesBySemester = async (req, res) => {
   try {
@@ -26,6 +29,17 @@ exports.getRegisteredClassesBySemester = async (req, res) => {
 exports.registerClass = async (req, res) => {
   try {
     const { studentId, classId, courseId, semesterId } = req.body;
+
+    // Lấy thông tin sinh viên dựa trên studentId
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Không tìm thấy thông tin sinh viên' });
+    }
+    const courseInfo = await Course.findById(courseId);
+    if (!courseInfo) {
+      return res.status(404).json({ message: 'Không tìm thấy thông tin môn học' });
+    }
+    const recipientEmail = student.Email;
 
     // Lấy thông tin lớp học mà sinh viên muốn đăng ký
     const classInfo = await Class.findById(classId);
@@ -53,23 +67,30 @@ exports.registerClass = async (req, res) => {
       return res.status(400).json({ message: 'Lịch học của lớp này trùng với một lớp khác đã đăng ký' });
     }
 
-    // Kiểm tra số lượng sinh viên đăng ký
     const registeredStudentsCount = await ClassRegistration.countDocuments({ classId, semesterId });
     if (registeredStudentsCount >= classInfo.Max_Students) {
       return res.status(400).json({ message: 'Lớp học đã đầy, không thể đăng ký' });
     }
 
-    // Nếu không có xung đột, thêm đăng ký lớp học mới vào cơ sở dữ liệu
+
     const registration = new ClassRegistration({ studentId, classId, courseId, semesterId });
     const savedRegistration = await registration.save();
+    const courseFee = courseInfo.Credit_Hours * 900000;
+    const emailSubject = 'Đăng ký lớp học thành công';
+    const emailText = `Bạn đã đăng ký một lớp học thành công.\n
+                      Thông tin môn học:\n
+                      Tên môn học: ${courseInfo.Course_Name}\n
+                      Số tín chỉ: ${courseInfo.Credit_Hours}\n
+                      Số tiền phải đóng: ${courseFee.toLocaleString()} VND\n`;
+    await sendEmail(recipientEmail, emailSubject, emailText);
 
+    // Trả về kết quả thành công
     res.status(201).json({ message: 'Đăng ký lớp học thành công', savedRegistration });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Đã xảy ra lỗi khi đăng ký lớp học' });
   }
 };
-
 
 exports.cancelRegistrationById = async (req, res) => {
     try {
