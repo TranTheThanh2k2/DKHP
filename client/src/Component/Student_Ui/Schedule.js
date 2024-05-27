@@ -121,7 +121,7 @@ const Schedule = () => {
 
   return (
     <div className="schedule-container">
-      <h3>Xin Chào ! {fullName}</h3>
+      <h3 className="h3">Xin Chào ! {fullName}</h3>
       <p>Khoa : {departmentCode} </p>
       <div className="schedule-dropdown">
         <label>Chọn Học Kỳ:</label>
@@ -129,7 +129,7 @@ const Schedule = () => {
       </div>
       {classSchedule && (
         <div>
-          <h2>Lịch Học</h2>
+          <h2 className="h2">Lịch Học</h2>
           <table className="schedule-table">
             <thead>
               <tr>
