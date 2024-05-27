@@ -7,6 +7,10 @@ const InfoStudent = () => {
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [departmentCode, setDepartmentCode] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const [registeredCourses, setRegisteredCourses] = useState([]);
   const [totalCreditHours, setTotalCreditHours] = useState(167);
   const [hoverContent, setHoverContent] = useState("");
@@ -29,6 +33,9 @@ const InfoStudent = () => {
       setFullName(student.Full_Name);
       setDepartmentCode(student.Department_Code);
       setGender(student.Gender);
+      setAddress(student.Address);
+      setEmail(student.Email);
+      setPhoneNumber(student.Phone_Number);
 
       const coursesResponse = await axios.get(
         `http://localhost:3000/api/students/${studentId}/registered-courses`
@@ -65,6 +72,10 @@ const InfoStudent = () => {
       <p className="info">Họ và tên: {fullName}</p>
       <p className="info">Giới tính: {gender}</p>
       <p className="info">Khoa: {departmentCode}</p>
+      <p className="info">Địa chỉ: {address}</p>
+      <p className="info">Email: {email}</p>
+      <p className="info">Số điện thoại: {phoneNumber}</p>
+
       <h1>Số lượng tín chỉ đã đạt được</h1>
       {!loading && (
         <svg
@@ -81,7 +92,10 @@ const InfoStudent = () => {
           />
           <path
             className="circle"
-            strokeDasharray={`${calculatePercentage(totalCreditHours, 167)} 100`}
+            strokeDasharray={`${calculatePercentage(
+              totalCreditHours,
+              167
+            )} 100`}
             d="M18 2.0845
           a 15.9155 15.9155 0 0 1 0 31.831
           a 15.9155 15.9155 0 0 1 0 -31.831"
